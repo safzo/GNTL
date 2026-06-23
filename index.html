@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NTL · Production Command</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { mono: ['JetBrains Mono', 'Fira Mono', 'monospace'] },
+        colors: {
+          ntl: {
+            bg:      '#0A0C10',
+            surface: '#111318',
+            card:    '#161B23',
+            border:  '#1F2733',
+            accent:  '#00C2FF',
+            green:   '#00E5A0',
+            amber:   '#FFB020',
+            red:     '#FF4757',
+            muted:   '#4A5568',
+            label:   '#8896A6',
+          }
+        }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #0A0C10;
+    color: #E2E8F0;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── scrollbar ─────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #111318; }
+  ::-webkit-scrollbar-thumb { background: #1F2733; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2D3748; }
+
+  /* ── card ───────────────────────────────────── */
+  .ntl-card {
+    background: #161B23;
+    border: 1px solid #1F2733;
+    border-radius: 12px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .ntl-card:hover { border-color: #2D3748; box-shadow: 0 0 0 1px #00C2FF15; }
+
+  /* ── progress bar ───────────────────────────── */
+  .progress-track {
+    background: #1F2733;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 6px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* ── badge ──────────────────────────────────── */
+  .badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+
+  /* ── department lane ────────────────────────── */
+  .dept-lane {
+    background: #161B23;
+    border: 1px solid #1F2733;
+    border-radius: 14px;
+    transition: border-color .2s, box-shadow .2s;
+    cursor: pointer;
+  }
+  .dept-lane:hover { border-color: #00C2FF40; box-shadow: 0 4px 24px #00C2FF08; }
+  .dept-lane.active { border-color: #00C2FF80; box-shadow: 0 0 0 1px #00C2FF30; }
+
+  /* ── modal ──────────────────────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,12,16,.88);
+    backdrop-filter: blur(4px);
+    z-index: 9000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: #161B23;
+    border: 1px solid #2D3748;
+    border-radius: 16px;
+    width: 100%; max-width: 680px;
+    max-height: 90vh; overflow-y: auto;
+    transform: translateY(16px) scale(.98);
+    transition: transform .25s cubic-bezier(.4,0,.2,1);
+  }
+  .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+
+  /* ── input ──────────────────────────────────── */
+  .ntl-input {
+    background: #111318;
+    border: 1px solid #1F2733;
+    border-radius: 8px;
+    color: #E2E8F0;
+    padding: 10px 14px;
+    font-size: 14px;
+    width: 100%;
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+  }
+  .ntl-input:focus { border-color: #00C2FF80; box-shadow: 0 0 0 3px #00C2FF15; }
+  .ntl-input:read-only { opacity: .5; cursor: not-allowed; }
+
+  /* ── checkbox ───────────────────────────────── */
+  .ntl-check {
+    width: 18px; height: 18px;
+    border: 2px solid #2D3748;
+    border-radius: 4px;
+    background: #111318;
+    cursor: pointer;
+    appearance: none;
+    flex-shrink: 0;
+    transition: background .15s, border-color .15s;
+  }
+  .ntl-check:checked { background: #00E5A0; border-color: #00E5A0; }
+  .ntl-check:checked::after {
+    content: '✓';
+    display: flex; align-items: center; justify-content: center;
+    color: #0A0C10;
+    font-size: 12px;
+    font-weight: 700;
+    height: 100%;
+  }
+
+  /* ── button ─────────────────────────────────── */
+  .btn-primary {
+    background: linear-gradient(135deg, #00C2FF, #0090CC);
+    color: #fff;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: opacity .15s, transform .1s;
+  }
+  .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: transparent;
+    color: #8896A6;
+    border: 1px solid #1F2733;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-ghost:hover { border-color: #2D3748; color: #E2E8F0; }
+
+  /* ── connection pill ─────────────────────────── */
+  .conn-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .conn-dot.connected { background: #00E5A0; box-shadow: 0 0 6px #00E5A060; animation: pulse-green 2s infinite; }
+  .conn-dot.connecting { background: #FFB020; box-shadow: 0 0 6px #FFB02060; animation: pulse-amber 1s infinite; }
+  .conn-dot.disconnected { background: #FF4757; }
+
+  @keyframes pulse-green {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:.6; transform:scale(1.25); }
+  }
+  @keyframes pulse-amber {
+    0%,100% { opacity:1; }
+    50% { opacity:.4; }
+  }
+
+  /* ── sync toast ──────────────────────────────── */
+  .sync-toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: #161B23; border: 1px solid #00E5A040;
+    border-radius: 10px; padding: 12px 18px;
+    font-size: 13px; color: #00E5A0;
+    z-index: 9999;
+    transform: translateY(80px); opacity: 0;
+    transition: all .3s cubic-bezier(.4,0,.2,1);
+  }
+  .sync-toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── stat number ─────────────────────────────── */
+  .stat-num {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ── bottleneck alert ────────────────────────── */
+  .bottleneck-bar {
+    background: linear-gradient(90deg, #FF475710, #FF475702);
+    border-left: 3px solid #FF4757;
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #FF6B78;
+  }
+
+  /* ── gate blocked ────────────────────────────── */
+  .gate-blocked {
+    background: #FF47571A;
+    border: 1px solid #FF475740;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #FF8B96;
+  }
+
+  /* ── mode toggle ─────────────────────────────── */
+  .mode-toggle {
+    background: #111318;
+    border: 1px solid #1F2733;
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+  }
+  .mode-toggle button {
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .mode-toggle button.active-mode {
+    background: #00C2FF20;
+    color: #00C2FF;
+  }
+  .mode-toggle button:not(.active-mode) {
+    background: transparent;
+    color: #4A5568;
+  }
+
+  /* ── order tab ───────────────────────────────── */
+  .order-tab {
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all .15s;
+  }
+  .order-tab.selected {
+    background: #00C2FF15;
+    border-color: #00C2FF40;
+    color: #00C2FF;
+  }
+  .order-tab:not(.selected) {
+    color: #4A5568;
+    border-color: #1F2733;
+  }
+  .order-tab:not(.selected):hover { color: #8896A6; border-color: #2D3748; }
+
+  /* ── lane status strip ───────────────────────── */
+  .lane-status {
+    width: 3px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TOP NAVIGATION BAR
+═══════════════════════════════════════════════════════════════ -->
+<header style="background:#111318; border-bottom:1px solid #1F2733; position:sticky; top:0; z-index:800;">
+  <div style="max-width:1440px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; gap:16px;">
+
+    <!-- Logo -->
+    <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#00C2FF15"/>
+        <path d="M8 10C8 10 12 8 16 8C20 8 24 10 24 10" stroke="#00C2FF" stroke-width="2" stroke-linecap="round"/>
+        <path d="M8 16C8 16 12 14 16 14C20 14 24 16 24 16" stroke="#00E5A0" stroke-width="2" stroke-linecap="round"/>
+        <path d="M8 22C8 22 12 20 16 20C20 20 24 22 24 22" stroke="#00C2FF" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="16" cy="16" r="2" fill="#00E5A0"/>
+      </svg>
+      <div>
+        <div style="font-size:14px; font-weight:800; color:#E2E8F0; letter-spacing:-.01em;">NTL</div>
+        <div style="font-size:9px; font-weight:600; color:#4A5568; letter-spacing:.1em; text-transform:uppercase;">Production Command</div>
+      </div>
+    </div>
+
+    <div style="width:1px; height:28px; background:#1F2733;"></div>
+
+    <!-- Order Selector -->
+    <div style="display:flex; gap:6px; align-items:center; flex:1; overflow-x:auto;" id="orderTabs"></div>
+
+    <div style="flex:1;"></div>
+
+    <!-- Connection Status -->
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="display:flex; align-items:center; gap:6px; background:#111318; border:1px solid #1F2733; border-radius:8px; padding:6px 12px;">
+        <span class="conn-dot connecting" id="connDot"></span>
+        <span style="font-size:11px; font-weight:600; color:#8896A6;" id="connLabel">Connecting…</span>
+      </div>
+
+      <!-- Mode Toggle -->
+      <div class="mode-toggle">
+        <button onclick="setMode('viewer')" id="btnViewer">👁 Viewer</button>
+        <button onclick="setMode('editor')" id="btnEditor">✏️ Editor</button>
+      </div>
+    </div>
+
+    <!-- Session Token -->
+    <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+      <div style="background:#111318; border:1px solid #1F2733; border-radius:8px; padding:4px 10px; display:flex; align-items:center; gap:6px;">
+        <span style="font-size:9px; color:#4A5568; font-weight:600; text-transform:uppercase; letter-spacing:.06em;">Session</span>
+        <span style="font-family:'JetBrains Mono', monospace; font-size:11px; color:#8896A6;" id="sessionDisplay"></span>
+        <button onclick="copyToken()" style="background:none; border:none; color:#00C2FF; cursor:pointer; font-size:11px; padding:0 2px;" title="Copy sync token">⧉</button>
+      </div>
+      <button onclick="openSyncModal()" style="background:#00C2FF15; border:1px solid #00C2FF30; border-radius:8px; padding:6px 12px; color:#00C2FF; font-size:11px; font-weight:700; cursor:pointer; text-transform:uppercase; letter-spacing:.06em;">⟳ Sync</button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════════════ -->
+<main style="max-width:1440px; margin:0 auto; padding:24px;">
+
+  <!-- KPI Strip -->
+  <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:24px;" id="kpiStrip"></div>
+
+  <!-- Department Lanes -->
+  <div style="display:flex; flex-direction:column; gap:10px;" id="deptLanes"></div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ENTRY MODAL
+═══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="entryModal">
+  <div class="modal-box">
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- Sync Config Modal -->
+<div class="modal-overlay" id="syncModal">
+  <div class="modal-box" style="max-width:480px;">
+    <div style="padding:24px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+        <h2 style="font-size:18px; font-weight:800;">⟳ Sync Session</h2>
+        <button onclick="closeSyncModal()" style="background:none; border:none; color:#4A5568; cursor:pointer; font-size:20px;">×</button>
+      </div>
+      <p style="font-size:13px; color:#8896A6; margin-bottom:16px;">Share the token below so collaborators see your live session. Paste someone else's token to join their session.</p>
+      <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Current Session Token</label>
+      <div style="display:flex; gap:8px; margin-bottom:16px;">
+        <input id="tokenDisplay" class="ntl-input" readonly style="font-family:'JetBrains Mono',monospace; font-size:12px;" />
+        <button onclick="copyToken()" class="btn-primary" style="flex-shrink:0; padding:10px 14px;">Copy</button>
+      </div>
+      <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Join Another Session</label>
+      <div style="display:flex; gap:8px; margin-bottom:16px;">
+        <input id="joinTokenInput" class="ntl-input" placeholder="Paste session token…" style="font-family:'JetBrains Mono',monospace; font-size:12px;" />
+        <button onclick="joinSession()" class="btn-primary" style="flex-shrink:0;">Join</button>
+      </div>
+      <hr style="border:none; border-top:1px solid #1F2733; margin:16px 0;" />
+      <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Manual State Export / Import</label>
+      <textarea id="stateJson" class="ntl-input" rows="5" style="font-family:'JetBrains Mono',monospace; font-size:10px; resize:vertical;" placeholder="State JSON will appear here…"></textarea>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button onclick="exportState()" class="btn-ghost" style="flex:1;">Export State</button>
+        <button onclick="importState()" class="btn-primary" style="flex:1;">Import State</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="sync-toast" id="syncToast"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     APPLICATION JAVASCRIPT
+═══════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── DEPARTMENTS DEFINITION ─────────────────────────────────────── */
+const DEPARTMENTS = [
+  {
+    id: 'yarn',
+    label: 'Yarn Receiving',
+    short: 'YARN',
+    color: '#A78BFA',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <ellipse cx="24" cy="24" rx="14" ry="10" stroke="currentColor" stroke-width="2"/>
+      <ellipse cx="24" cy="24" rx="8" ry="5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+      <path d="M10 24 C10 18 17 12 24 12 C31 12 38 18 38 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M24 14 C20 16 18 20 18 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <rect x="20" y="30" width="8" height="8" rx="2" fill="currentColor" opacity=".3"/>
+      <rect x="21" y="31" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1"/>
+    </svg>`,
+    gates: [],
+    prevDept: null,
+    nextDept: 'knitting',
+  },
+  {
+    id: 'knitting',
+    label: 'Knitting',
+    short: 'KNIT',
+    color: '#60A5FA',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <rect x="12" y="8" width="24" height="32" rx="12" stroke="currentColor" stroke-width="2"/>
+      <circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M24 8 L24 18" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M24 30 L24 40" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M12 24 L18 24" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M30 24 L36 24" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="2" fill="currentColor"/>
+    </svg>`,
+    gates: [
+      { id: 'g_knit_1', label: 'Yarn quality test passed (GSM check)', required: true },
+      { id: 'g_knit_2', label: 'Machine gauge set per buyer spec', required: true },
+    ],
+    prevDept: 'yarn',
+    nextDept: 'dyeing',
+  },
+  {
+    id: 'dyeing',
+    label: 'Dyeing',
+    short: 'DYE',
+    color: '#F472B6',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <rect x="10" y="14" width="28" height="26" rx="6" stroke="currentColor" stroke-width="2"/>
+      <rect x="14" y="10" width="20" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M18 28 C18 25 22 23 24 26 C26 29 30 27 30 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="24" cy="34" r="2" fill="currentColor" opacity=".5"/>
+      <path d="M20 8 L20 4 M24 8 L24 4 M28 8 L28 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>`,
+    gates: [
+      { id: 'g_dye_1', label: 'Colour standard (lab dip) approved by Buyer', required: true },
+      { id: 'g_dye_2', label: 'Dyeing recipe formula card issued', required: true },
+    ],
+    prevDept: 'knitting',
+    nextDept: 'finishing',
+  },
+  {
+    id: 'finishing',
+    label: 'Dyeing-Finishing',
+    short: 'FIN',
+    color: '#34D399',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <rect x="6" y="18" width="36" height="14" rx="4" stroke="currentColor" stroke-width="2"/>
+      <circle cx="10" cy="25" r="4" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="38" cy="25" r="4" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M14 22 L34 22" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M14 28 L34 28" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="20" y="32" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
+    </svg>`,
+    gates: [
+      { id: 'g_fin_1', label: 'Shade/wash fastness report within tolerance', required: true },
+      { id: 'g_fin_2', label: 'Shrinkage % accepted per buyer wash care', required: true },
+    ],
+    prevDept: 'dyeing',
+    nextDept: 'cutting',
+  },
+  {
+    id: 'cutting',
+    label: 'Cutting',
+    short: 'CUT',
+    color: '#FBBF24',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <rect x="8" y="30" width="32" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+      <path d="M16 30 L16 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M24 30 L24 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M32 30 L32 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M14 10 L18 10 L16 16 Z" fill="currentColor" opacity=".7"/>
+      <path d="M22 8 L26 8 L24 14 Z" fill="currentColor" opacity=".7"/>
+      <path d="M30 12 L34 12 L32 18 Z" fill="currentColor" opacity=".7"/>
+    </svg>`,
+    gates: [
+      { id: 'g_cut_1', label: 'Approved size set sample verified', required: true },
+      { id: 'g_cut_2', label: 'CAD marker plan approved and printed', required: true },
+      { id: 'g_cut_3', label: 'Trim store issued accessory BOM', required: false },
+    ],
+    prevDept: 'finishing',
+    nextDept: 'printing',
+  },
+  {
+    id: 'printing',
+    label: 'Printing',
+    short: 'PRNT',
+    color: '#F97316',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2"/>
+      <line x1="24" y1="10" x2="24" y2="38" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="10" y1="24" x2="38" y2="24" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="14" y1="14" x2="34" y2="34" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="34" y1="14" x2="14" y2="34" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="4" fill="currentColor" opacity=".25"/>
+      <circle cx="24" cy="24" r="2" fill="currentColor"/>
+    </svg>`,
+    gates: [
+      { id: 'g_prnt_1', label: 'Merchandiser Work Order issued for Printing', required: true },
+      { id: 'g_prnt_2', label: 'Buyer Print Approval & Artwork Instruction signed off', required: true },
+      { id: 'g_prnt_3', label: 'Print Strike-Off approved by QC', required: true },
+    ],
+    prevDept: 'cutting',
+    nextDept: 'sewing',
+  },
+  {
+    id: 'sewing',
+    label: 'Sewing',
+    short: 'SEW',
+    color: '#06B6D4',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <path d="M8 36 L16 20 L24 28 L32 12 L40 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="6" y="34" width="36" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="20" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="20" cy="16" r="1" fill="currentColor"/>
+      <path d="M20 13 L20 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>`,
+    gates: [
+      { id: 'g_sew_1', label: 'Approved pre-production sample (PPS) passed QC', required: true },
+      { id: 'g_sew_2', label: 'Line balancing sheet issued by IE dept', required: true },
+    ],
+    prevDept: 'printing',
+    nextDept: 'ironing',
+  },
+  {
+    id: 'ironing',
+    label: 'Ironing & QC',
+    short: 'IRON',
+    color: '#818CF8',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <path d="M8 32 L16 22 L36 22 L40 32 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M8 32 L40 32" stroke="currentColor" stroke-width="2"/>
+      <rect x="20" y="16" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="12" cy="36" r="3" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="36" cy="36" r="3" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M18 36 L30 36" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M26 26 L26 22 M30 28 L34 24 M22 28 L18 24" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+    </svg>`,
+    gates: [
+      { id: 'g_iron_1', label: 'Final Inspection (AQL 2.5) pass sheet signed', required: true },
+      { id: 'g_iron_2', label: 'Measurement report within 1cm tolerance', required: true },
+    ],
+    prevDept: 'sewing',
+    nextDept: 'packaging',
+  },
+  {
+    id: 'packaging',
+    label: 'Packaging',
+    short: 'PACK',
+    color: '#10B981',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <rect x="8" y="20" width="32" height="22" rx="3" stroke="currentColor" stroke-width="2"/>
+      <path d="M8 26 L40 26" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M24 26 L24 42" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M16 8 L8 20 L40 20 L32 8 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M24 8 L24 20" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M18 30 L30 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M18 34 L26 34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>`,
+    gates: [
+      { id: 'g_pack_1', label: 'Buyer packing instruction & sticker artwork approved', required: true },
+      { id: 'g_pack_2', label: 'Carton measurement and weight within freight tolerance', required: true },
+      { id: 'g_pack_3', label: 'Pre-shipment inspection (PSI) booking confirmed', required: true },
+    ],
+    prevDept: 'ironing',
+    nextDept: null,
+  },
+];
+
+/* ── INITIAL ORDERS STATE ───────────────────────────────────────── */
+function makeOrderState(orderQty) {
+  const state = {};
+  DEPARTMENTS.forEach((d, idx) => {
+    state[d.id] = {
+      received:  idx === 0 ? orderQty : 0,
+      wip:       0,
+      output:    0,
+      alt:       0,
+      rejected:  0,
+      gateChecks: {},
+    };
+    d.gates.forEach(g => { state[d.id].gateChecks[g.id] = false; });
+  });
+  return state;
+}
+
+const INITIAL_ORDERS = [
+  {
+    id: 'ORD-001',
+    buyer: "Fuel'd Fans",
+    item: 'Polo Shirt',
+    style: 'PS-2024-BLK',
+    color: 'Jet Black',
+    qty: 5000,
+    shipDate: '2025-09-15',
+    state: makeOrderState(5000),
+  },
+  {
+    id: 'ORD-002',
+    buyer: 'Alpine Trek Co.',
+    item: 'Fleece Jacket',
+    style: 'FJ-2024-NVY',
+    color: 'Navy Blue',
+    qty: 3200,
+    shipDate: '2025-10-02',
+    state: makeOrderState(3200),
+  },
+  {
+    id: 'ORD-003',
+    buyer: 'Urban Layers',
+    item: 'T-Shirt (Basic)',
+    style: 'TS-2024-WHT',
+    color: 'White',
+    qty: 8500,
+    shipDate: '2025-08-28',
+    state: makeOrderState(8500),
+  },
+];
+
+/* ── APP STATE ─────────────────────────────────────────────────── */
+let appState = {
+  orders: JSON.parse(JSON.stringify(INITIAL_ORDERS)),
+  selectedOrderId: 'ORD-001',
+  mode: 'editor',
+  sessionId: generateSessionId(),
+};
+
+let mqttClient = null;
+let mqttConnected = false;
+let modalDeptId = null;
+
+/* ── SESSION / SYNC UTILITIES ──────────────────────────────────── */
+function generateSessionId() {
+  return 'NTL-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+}
+
+function getOrder() {
+  return appState.orders.find(o => o.id === appState.selectedOrderId);
+}
+
+function getDeptState(deptId) {
+  return getOrder().state[deptId];
+}
+
+function getSelectedOrderIdx() {
+  return appState.orders.findIndex(o => o.id === appState.selectedOrderId);
+}
+
+/* ── MQTT REAL-TIME SYNC ─────────────────────────────────────────
+   Uses broker.hivemq.com public WebSocket MQTT broker.
+   Topic: ntl/<sessionId>/state
+   Each editor publishes full state on any change.
+   Viewers subscribe and update their local state.
+────────────────────────────────────────────────────────────────── */
+function initMQTT() {
+  try {
+    // MQTT.js loaded via CDN in body
+    const topic = `ntl/${appState.sessionId}/state`;
+    const brokerURL = 'wss://broker.hivemq.com:8884/mqtt';
+
+    mqttClient = mqtt.connect(brokerURL, {
+      clientId: 'ntl_' + Math.random().toString(36).substr(2, 8),
+      clean: true,
+      reconnectPeriod: 3000,
+      connectTimeout: 8000,
+    });
+
+    mqttClient.on('connect', () => {
+      mqttConnected = true;
+      setConnStatus('connected', 'Live');
+      mqttClient.subscribe(topic, { qos: 0 });
+    });
+
+    mqttClient.on('message', (t, payload) => {
+      try {
+        const incoming = JSON.parse(payload.toString());
+        // Ignore our own publishes
+        if (incoming._client === mqttClient.options.clientId) return;
+        mergeRemoteState(incoming);
+      } catch(_) {}
+    });
+
+    mqttClient.on('error', () => setConnStatus('disconnected', 'Offline'));
+    mqttClient.on('offline', () => setConnStatus('disconnected', 'Offline'));
+    mqttClient.on('reconnect', () => setConnStatus('connecting', 'Reconnecting…'));
+
+  } catch(e) {
+    setConnStatus('disconnected', 'Offline');
+  }
+}
+
+function publishState() {
+  if (!mqttClient || !mqttConnected) return;
+  const topic = `ntl/${appState.sessionId}/state`;
+  const payload = JSON.stringify({
+    ...appState,
+    _client: mqttClient.options.clientId,
+    _ts: Date.now(),
+  });
+  mqttClient.publish(topic, payload, { qos: 0 });
+}
+
+function mergeRemoteState(incoming) {
+  appState.orders = incoming.orders;
+  showToast('🔄 State synced from remote collaborator');
+  render();
+}
+
+function setConnStatus(state, label) {
+  const dot = document.getElementById('connDot');
+  const lbl = document.getElementById('connLabel');
+  dot.className = `conn-dot ${state}`;
+  lbl.textContent = label + (appState.mode === 'editor' ? ' · Editor' : ' · Viewer');
+}
+
+/* ── RENDER ENGINE ──────────────────────────────────────────────── */
+function render() {
+  renderOrderTabs();
+  renderKPIs();
+  renderLanes();
+}
+
+function renderOrderTabs() {
+  const container = document.getElementById('orderTabs');
+  container.innerHTML = appState.orders.map(o => `
+    <button class="order-tab ${o.id === appState.selectedOrderId ? 'selected' : ''}"
+            onclick="selectOrder('${o.id}')">
+      <span style="font-size:9px; color:inherit; opacity:.6; display:block;">${o.buyer}</span>
+      ${o.item} · ${o.id}
+    </button>
+  `).join('');
+}
+
+function renderKPIs() {
+  const order = getOrder();
+  const totalQty = order.qty;
+  const deptStates = Object.values(order.state);
+
+  const totalOutput = order.state['packaging'].output;
+  const totalAlt    = deptStates.reduce((s, d) => s + (d.alt || 0), 0);
+  const totalRej    = deptStates.reduce((s, d) => s + (d.rejected || 0), 0);
+
+  // Find active stage (deepest dept with output > 0 or received > 0)
+  let activeStage = DEPARTMENTS[0].label;
+  for (let i = DEPARTMENTS.length - 1; i >= 0; i--) {
+    const ds = order.state[DEPARTMENTS[i].id];
+    if (ds.received > 0 || ds.output > 0) { activeStage = DEPARTMENTS[i].label; break; }
+  }
+
+  const shipPct = Math.round((totalOutput / totalQty) * 100);
+
+  const kpis = [
+    { label: 'Order Qty', value: totalQty.toLocaleString(), sub: order.item, color: '#00C2FF' },
+    { label: 'Ready to Ship', value: totalOutput.toLocaleString(), sub: `${shipPct}% complete`, color: '#00E5A0' },
+    { label: 'Alterations', value: totalAlt.toLocaleString(), sub: 'Across all stages', color: '#FFB020' },
+    { label: 'Rejected', value: totalRej.toLocaleString(), sub: 'Total defects', color: '#FF4757' },
+    { label: 'Active Stage', value: activeStage.split(' ')[0], sub: activeStage, color: '#A78BFA' },
+  ];
+
+  document.getElementById('kpiStrip').innerHTML = kpis.map(k => `
+    <div class="ntl-card" style="padding:20px;">
+      <div style="font-size:10px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px;">${k.label}</div>
+      <div class="stat-num" style="color:${k.color};">${k.value}</div>
+      <div style="font-size:11px; color:#8896A6; margin-top:4px;">${k.sub}</div>
+    </div>
+  `).join('');
+}
+
+function renderLanes() {
+  const order = getOrder();
+  document.getElementById('deptLanes').innerHTML = DEPARTMENTS.map((dept, idx) => {
+    const ds = order.state[dept.id];
+    const pct = order.qty > 0 ? Math.min(100, Math.round((ds.output / order.qty) * 100)) : 0;
+    const recvPct = order.qty > 0 ? Math.min(100, Math.round((ds.received / order.qty) * 100)) : 0;
+
+    // Determine if this dept is bottlenecked
+    const allGatesPassed = dept.gates.filter(g => g.required).every(g => ds.gateChecks[g.id]);
+    const prevDeptOutput = dept.prevDept ? order.state[dept.prevDept].output : order.qty;
+    const isBlocked = dept.prevDept && !allGatesPassed && ds.received < prevDeptOutput;
+    const isActive  = ds.received > 0 && pct < 100;
+    const isDone    = pct === 100;
+
+    const statusColor = isDone ? '#00E5A0' : isBlocked ? '#FF4757' : isActive ? '#00C2FF' : '#4A5568';
+    const statusLabel = isDone ? 'Complete' : isBlocked ? 'Blocked' : isActive ? 'In Progress' : 'Pending';
+    const statusBg    = isDone ? '#00E5A020' : isBlocked ? '#FF475720' : isActive ? '#00C2FF20' : '#1F273380';
+
+    return `
+    <div class="dept-lane" onclick="openModal('${dept.id}')" style="padding:16px 20px;">
+      <div style="display:flex; align-items:center; gap:16px;">
+
+        <!-- Icon -->
+        <div style="width:48px; height:48px; flex-shrink:0; color:${dept.color}; opacity:.85; background:${dept.color}15; border-radius:10px; padding:8px;">
+          ${dept.icon}
+        </div>
+
+        <!-- Dept name + status -->
+        <div style="min-width:160px; flex-shrink:0;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+            <span style="font-size:14px; font-weight:700; color:#E2E8F0;">${dept.label}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:2px 8px; border-radius:99px; background:${statusBg}; color:${statusColor};">${statusLabel}</span>
+            ${isBlocked ? `<span style="font-size:10px; color:#FF6B78;">⚠ Gate blocked</span>` : ''}
+          </div>
+        </div>
+
+        <!-- Metrics -->
+        <div style="display:flex; gap:24px; flex:1;">
+          ${renderMetricCell('Received', ds.received, order.qty, '#8896A6')}
+          ${renderMetricCell('WIP', Math.max(0, ds.received - ds.output - ds.alt - ds.rejected), null, '#FFB020')}
+          ${renderMetricCell('Output', ds.output, order.qty, '#00E5A0')}
+          ${renderMetricCell('Alt', ds.alt, null, '#F97316')}
+          ${renderMetricCell('Rej', ds.rejected, null, '#FF4757')}
+        </div>
+
+        <!-- Progress bar + percentage -->
+        <div style="min-width:160px; flex-shrink:0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-size:10px; color:#4A5568; font-weight:600;">PROGRESS</span>
+            <span style="font-size:14px; font-weight:800; color:${statusColor};">${pct}%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:${pct}%; background:${statusColor};"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;">
+            <span style="font-size:9px; color:#2D3748;">0</span>
+            <span style="font-size:9px; color:#2D3748;">${order.qty.toLocaleString()}</span>
+          </div>
+        </div>
+
+        <!-- Chevron -->
+        <div style="color:#2D3748; font-size:16px;">›</div>
+
+      </div>
+      ${isBlocked ? `
+      <div class="bottleneck-bar" style="margin-top:12px;">
+        ⛔ Blocked by unchecked quality gate(s). Click to review and unlock.
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function renderMetricCell(label, value, total, color) {
+  return `
+    <div style="min-width:70px;">
+      <div style="font-size:9px; color:#4A5568; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:2px;">${label}</div>
+      <div style="font-size:18px; font-weight:800; color:${color}; line-height:1;">${(value || 0).toLocaleString()}</div>
+      ${total ? `<div style="font-size:9px; color:#2D3748;">${Math.round(((value||0)/total)*100)}%</div>` : ''}
+    </div>`;
+}
+
+/* ── MODAL ──────────────────────────────────────────────────────── */
+function openModal(deptId) {
+  modalDeptId = deptId;
+  renderModal();
+  document.getElementById('entryModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('entryModal').classList.remove('open');
+  modalDeptId = null;
+}
+
+function renderModal() {
+  const dept  = DEPARTMENTS.find(d => d.id === modalDeptId);
+  const order = getOrder();
+  const ds    = order.state[modalDeptId];
+  const isEditor = appState.mode === 'editor';
+
+  const prevOutput = dept.prevDept ? order.state[dept.prevDept].output : order.qty;
+  const wip = Math.max(0, ds.received - ds.output - ds.alt - ds.rejected);
+  const allRequiredGates = dept.gates.filter(g => g.required).every(g => ds.gateChecks[g.id]);
+
+  document.getElementById('modalContent').innerHTML = `
+    <div style="padding:24px 28px;">
+      <!-- Header -->
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div style="width:52px; height:52px; color:${dept.color}; background:${dept.color}15; border-radius:12px; padding:9px; flex-shrink:0;">
+            ${dept.icon}
+          </div>
+          <div>
+            <div style="font-size:20px; font-weight:800; color:#E2E8F0;">${dept.label}</div>
+            <div style="font-size:12px; color:#8896A6; margin-top:2px;">
+              ${order.id} · ${order.buyer} · ${order.item} · ${order.qty.toLocaleString()} pcs
+            </div>
+          </div>
+        </div>
+        <button onclick="closeModal()" style="background:#1F2733; border:none; color:#8896A6; cursor:pointer; border-radius:8px; width:32px; height:32px; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+      </div>
+
+      ${dept.gates.length > 0 ? `
+      <!-- Quality Gate Checklist -->
+      <div style="background:#111318; border:1px solid #1F2733; border-radius:10px; padding:16px; margin-bottom:20px;">
+        <div style="font-size:11px; font-weight:700; color:#FFB020; text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px;">🔐 Quality Gates — must complete before output flows forward</div>
+        ${dept.gates.map(g => `
+          <label style="display:flex; align-items:flex-start; gap:10px; cursor:${isEditor ? 'pointer' : 'default'}; margin-bottom:10px; padding:8px; border-radius:6px; background:${ds.gateChecks[g.id] ? '#00E5A010' : 'transparent'}; border:1px solid ${ds.gateChecks[g.id] ? '#00E5A030' : '#1F2733'}; transition:all .15s;">
+            <input type="checkbox" class="ntl-check" id="gate_${g.id}"
+              ${ds.gateChecks[g.id] ? 'checked' : ''}
+              ${!isEditor ? 'disabled' : ''}
+              onchange="toggleGate('${g.id}', this.checked)" />
+            <div>
+              <div style="font-size:13px; color:${ds.gateChecks[g.id] ? '#E2E8F0' : '#8896A6'}; font-weight:500;">${g.label}</div>
+              ${g.required ? `<div style="font-size:10px; color:#FF4757; margin-top:2px;">Required</div>` : `<div style="font-size:10px; color:#4A5568; margin-top:2px;">Optional</div>`}
+            </div>
+          </label>
+        `).join('')}
+        ${!allRequiredGates && !isEditor ? `
+          <div class="gate-blocked" style="margin-top:8px;">
+            ⛔ Switch to Editor mode to check off quality gates.
+          </div>` : ''}
+      </div>` : ''}
+
+      ${dept.prevDept ? `
+      <!-- Auto-fill notice -->
+      <div style="background:#00C2FF0A; border:1px solid #00C2FF20; border-radius:8px; padding:10px 14px; margin-bottom:16px; font-size:12px; color:#00C2FF80;">
+        ℹ Previous stage (${DEPARTMENTS.find(d => d.id === dept.prevDept).label}) approved output:
+        <strong style="color:#00C2FF;">${prevOutput.toLocaleString()} pcs</strong>
+        — auto-suggested as Received quantity below.
+      </div>` : ''}
+
+      <!-- Entry Form -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Quantity Received</label>
+          <input id="inp_received" class="ntl-input" type="number" min="0" max="${order.qty}"
+            value="${ds.received || ''}"
+            placeholder="${prevOutput.toLocaleString()} (suggested)"
+            ${!isEditor ? 'readonly' : ''}
+            oninput="calcWIP()" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#FFB020; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Running WIP <span style="font-weight:400; text-transform:none; letter-spacing:0;">(auto-calc)</span></label>
+          <input id="inp_wip" class="ntl-input" type="number" value="${wip}" readonly style="color:#FFB020; font-weight:700;" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#00E5A0; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Approved Output</label>
+          <input id="inp_output" class="ntl-input" type="number" min="0"
+            value="${ds.output || ''}"
+            placeholder="0"
+            ${!isEditor ? 'readonly' : ''}
+            oninput="calcWIP()" />
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#F97316; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Alteration</label>
+            <input id="inp_alt" class="ntl-input" type="number" min="0"
+              value="${ds.alt || ''}"
+              placeholder="0"
+              ${!isEditor ? 'readonly' : ''}
+              oninput="calcWIP()" />
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#FF4757; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Rejected</label>
+            <input id="inp_rej" class="ntl-input" type="number" min="0"
+              value="${ds.rejected || ''}"
+              placeholder="0"
+              ${!isEditor ? 'readonly' : ''}
+              oninput="calcWIP()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini progress in modal -->
+      <div style="background:#111318; border-radius:8px; padding:12px; margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:11px; color:#4A5568; font-weight:600;">DEPT COMPLETION</span>
+          <span style="font-size:16px; font-weight:800; color:#00E5A0;" id="modalPct">${Math.round((ds.output / order.qty)*100)}%</span>
+        </div>
+        <div class="progress-track" style="height:8px;">
+          <div class="progress-fill" id="modalPctBar" style="width:${Math.round((ds.output/order.qty)*100)}%; background:linear-gradient(90deg, #00E5A0, #00C2FF);"></div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button onclick="closeModal()" class="btn-ghost">Cancel</button>
+        ${isEditor ? `<button onclick="saveDeptData()" class="btn-primary">💾 Save & Sync</button>` : `<div style="font-size:12px; color:#4A5568; display:flex; align-items:center; padding:0 12px;">Read-only — switch to Editor mode to enter data</div>`}
+      </div>
+    </div>`;
+}
+
+/* ── FORM LOGIC ─────────────────────────────────────────────────── */
+function calcWIP() {
+  const received = parseInt(document.getElementById('inp_received').value) || 0;
+  const output   = parseInt(document.getElementById('inp_output').value)   || 0;
+  const alt      = parseInt(document.getElementById('inp_alt').value)      || 0;
+  const rej      = parseInt(document.getElementById('inp_rej').value)      || 0;
+  const wip = Math.max(0, received - output - alt - rej);
+  document.getElementById('inp_wip').value = wip;
+
+  const order = getOrder();
+  const pct = Math.min(100, Math.round((output / order.qty) * 100));
+  document.getElementById('modalPct').textContent = pct + '%';
+  document.getElementById('modalPctBar').style.width = pct + '%';
+}
+
+function toggleGate(gateId, val) {
+  const order = getOrder();
+  order.state[modalDeptId].gateChecks[gateId] = val;
+  publishState();
+  renderLanes();
+}
+
+function saveDeptData() {
+  const received = parseInt(document.getElementById('inp_received').value) || 0;
+  const output   = parseInt(document.getElementById('inp_output').value)   || 0;
+  const alt      = parseInt(document.getElementById('inp_alt').value)      || 0;
+  const rejected = parseInt(document.getElementById('inp_rej').value)      || 0;
+  const wip      = Math.max(0, received - output - alt - rejected);
+
+  const order = getOrder();
+  order.state[modalDeptId].received = received;
+  order.state[modalDeptId].output   = output;
+  order.state[modalDeptId].alt      = alt;
+  order.state[modalDeptId].rejected = rejected;
+  order.state[modalDeptId].wip      = wip;
+
+  closeModal();
+  render();
+  publishState();
+  showToast('✓ Saved & synced to all connected users');
+}
+
+/* ── MODE & ORDER ───────────────────────────────────────────────── */
+function setMode(mode) {
+  appState.mode = mode;
+  document.getElementById('btnViewer').classList.toggle('active-mode', mode === 'viewer');
+  document.getElementById('btnEditor').classList.toggle('active-mode', mode === 'editor');
+  setConnStatus(mqttConnected ? 'connected' : 'disconnected', mqttConnected ? 'Live' : 'Offline');
+}
+
+function selectOrder(id) {
+  appState.selectedOrderId = id;
+  render();
+}
+
+/* ── SYNC MODAL ─────────────────────────────────────────────────── */
+function openSyncModal() {
+  document.getElementById('tokenDisplay').value = appState.sessionId;
+  document.getElementById('stateJson').value = '';
+  document.getElementById('syncModal').classList.add('open');
+}
+function closeSyncModal() {
+  document.getElementById('syncModal').classList.remove('open');
+}
+
+function copyToken() {
+  const id = appState.sessionId;
+  navigator.clipboard.writeText(id).then(() => showToast('📋 Session token copied!'));
+  document.getElementById('tokenDisplay').value = id;
+}
+
+function joinSession() {
+  const token = document.getElementById('joinTokenInput').value.trim().toUpperCase();
+  if (!token) return;
+  appState.sessionId = token;
+  document.getElementById('sessionDisplay').textContent = token;
+  closeSyncModal();
+  setConnStatus('connecting', 'Reconnecting…');
+  if (mqttClient) { mqttClient.end(true); mqttClient = null; mqttConnected = false; }
+  initMQTT();
+  showToast('🔗 Joining session: ' + token);
+}
+
+function exportState() {
+  document.getElementById('stateJson').value = JSON.stringify(appState.orders, null, 2);
+}
+
+function importState() {
+  try {
+    const parsed = JSON.parse(document.getElementById('stateJson').value);
+    if (Array.isArray(parsed)) {
+      appState.orders = parsed;
+      closeSyncModal();
+      render();
+      showToast('✓ State imported successfully');
+    }
+  } catch(e) {
+    showToast('⚠ Invalid JSON — check and retry');
+  }
+}
+
+/* ── TOAST ──────────────────────────────────────────────────────── */
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('syncToast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+/* ── INIT ───────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  // Session ID in header
+  document.getElementById('sessionDisplay').textContent = appState.sessionId;
+
+  // Close modal on overlay click
+  document.getElementById('entryModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('entryModal')) closeModal();
+  });
+  document.getElementById('syncModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('syncModal')) closeSyncModal();
+  });
+
+  // Set initial mode buttons
+  setMode('editor');
+
+  // Initial render
+  render();
+
+  // Init MQTT (after MQTT.js is loaded)
+  initMQTT();
+});
+</script>
+
+<!-- MQTT.js via CDN -->
+<script src="https://unpkg.com/mqtt@5.3.4/dist/mqtt.min.js"></script>
+
+</body>
+</html>
