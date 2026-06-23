@@ -657,18 +657,38 @@ const DEPARTMENTS = [
 ];
 
 /* ── MAKE ORDER STATE ─────────────────────────────────────────────── */
-function makeOrderState() {
+function makeOrderState(sizeBreakdown) {
   const state = {};
-  DEPARTMENTS.forEach(d => {
+  const totalQty = Object.values(sizeBreakdown).reduce((sum, qty) => sum + qty, 0);
+  
+  // Departments that require size-wise tracking
+  const sizedDepts = ['cutting', 'printing', 'sewing', 'ironing', 'packaging'];
+
+  DEPARTMENTS.forEach((d, idx) => {
     state[d.id] = {
-      received: 0, wip: 0, output: 0, alt: 0, rejected: 0,
-      plannedLoss: 0, actualLoss: 0,
+      received: idx === 0 ? totalQty : 0,
+      wip: 0,
+      output: 0,
+      alt: 0,
+      rejected: 0,
       gateChecks: {},
+      customGates: [], // Array to push new dynamic checklists into
+      
+      // If it's a sized dept, initialize the size tracking
+      sizes: sizedDepts.includes(d.id) ? { 
+        received: JSON.parse(JSON.stringify(sizeBreakdown)),
+        output: Object.keys(sizeBreakdown).reduce((acc, size) => ({...acc, [size]: 0}), {})
+      } : null
     };
+    
     d.gates.forEach(g => { state[d.id].gateChecks[g.id] = false; });
   });
   return state;
 }
+
+// Example Initialization
+const initialSizeBreakdown = { XS: 200, S: 800, M: 1500, L: 1500, XL: 800, XXL: 200 };
+// Pass this to your INITIAL_ORDERS setup
 
 /* ── INITIAL ORDERS ───────────────────────────────────────────────── */
 const INITIAL_ORDERS = [
@@ -855,6 +875,59 @@ function renderKPIs() {
     { label: 'Active Stage', value: activeStage.split(' ')[0], sub: activeStage, color: '#A78BFA' },
   ];
 
+  /* The Fabric Consumption Calculator JS Logic*/
+  function calculateFabric() {
+    const order = getOrder();
+    const consumption = parseFloat(document.getElementById('inp_consumption').value) || 0;
+    const totalQty = order.qty; 
+    
+    // Formula: (Consumption * Total Pieces) / 12
+    const requiredKg = (consumption * totalQty) / 12;
+    
+    document.getElementById('calcResult').textContent = requiredKg.toFixed(2) + ' KG';
+  }
+  
+  /* The Fabric Consumption Calculator HTML version*/
+  <div class="ntl-card" style="padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    
+    <div>
+      <div style="font-size: 11px; font-weight: 700; color: #8896A6; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px;">
+        <span id="calcBuyer">FUEL'D FANS</span> · <span id="calcItem">POLO SHIRT</span> · <span id="calcColor">JET BLACK</span>
+      </div>
+      <div style="display: flex; gap: 8px;" id="calcSizesContainer">
+        </div>
+    </div>
+  
+    <div style="display: flex; align-items: center; gap: 16px; border-left: 1px solid #1F2733; padding-left: 24px;">
+      
+      <div>
+        <div style="font-size: 10px; font-weight: 700; color: #00E5A0; text-transform: uppercase; margin-bottom: 8px;">Fabric Consumption Calculator</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          
+          <div>
+            <div style="font-size: 9px; color: #8896A6; margin-bottom: 4px;">Consumption (kg/dz)</div>
+            <input type="number" id="inp_consumption" class="ntl-input" style="width: 80px; font-size: 16px; font-weight: 700; padding: 6px 10px;" value="2.50" step="0.01" oninput="calculateFabric()">
+          </div>
+          
+          <div style="color: #4A5568; font-size: 14px; margin-top: 14px;">×</div>
+          
+          <div>
+            <div style="font-size: 9px; color: #8896A6; margin-bottom: 4px;">Order Qty (pcs)</div>
+            <div style="font-size: 16px; font-weight: 700; color: #E2E8F0; margin-top: 10px;" id="calcTotalQty">5,000</div>
+          </div>
+          
+          <div style="color: #4A5568; font-size: 14px; margin-top: 14px;">/ 12 =</div>
+        </div>
+      </div>
+  
+      <div style="background: #00E5A00A; border: 1px solid #00E5A030; border-radius: 8px; padding: 12px 16px; margin-top: 16px;">
+        <div style="font-size: 9px; font-weight: 700; color: #00E5A0; margin-bottom: 2px;">Required Fabric</div>
+        <div style="font-size: 20px; font-weight: 800; color: #00E5A0;" id="calcResult">1041.67 KG</div>
+      </div>
+  
+    </div>
+  </div>
+  
   document.getElementById('kpiStrip').innerHTML = kpis.map(k => `
     <div class="ntl-card" style="padding:20px;">
       <div style="font-size:10px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px;">${k.label}</div>
