@@ -41,13 +41,11 @@
     overflow-x: hidden;
   }
 
-  /* ── scrollbar ─────────────────────────────── */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: #111318; }
   ::-webkit-scrollbar-thumb { background: #1F2733; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #2D3748; }
 
-  /* ── card ───────────────────────────────────── */
   .ntl-card {
     background: #161B23;
     border: 1px solid #1F2733;
@@ -56,7 +54,6 @@
   }
   .ntl-card:hover { border-color: #2D3748; box-shadow: 0 0 0 1px #00C2FF15; }
 
-  /* ── progress bar ───────────────────────────── */
   .progress-track {
     background: #1F2733;
     border-radius: 4px;
@@ -69,7 +66,6 @@
     transition: width .6s cubic-bezier(.4,0,.2,1);
   }
 
-  /* ── badge ──────────────────────────────────── */
   .badge {
     font-size: 10px;
     font-weight: 700;
@@ -79,7 +75,6 @@
     border-radius: 99px;
   }
 
-  /* ── department lane ────────────────────────── */
   .dept-lane {
     background: #161B23;
     border: 1px solid #1F2733;
@@ -90,7 +85,6 @@
   .dept-lane:hover { border-color: #00C2FF40; box-shadow: 0 4px 24px #00C2FF08; }
   .dept-lane.active { border-color: #00C2FF80; box-shadow: 0 0 0 1px #00C2FF30; }
 
-  /* ── modal ──────────────────────────────────── */
   .modal-overlay {
     position: fixed; inset: 0;
     background: rgba(10,12,16,.88);
@@ -106,14 +100,13 @@
     background: #161B23;
     border: 1px solid #2D3748;
     border-radius: 16px;
-    width: 100%; max-width: 680px;
+    width: 100%; max-width: 720px;
     max-height: 90vh; overflow-y: auto;
     transform: translateY(16px) scale(.98);
     transition: transform .25s cubic-bezier(.4,0,.2,1);
   }
   .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
 
-  /* ── input ──────────────────────────────────── */
   .ntl-input {
     background: #111318;
     border: 1px solid #1F2733;
@@ -128,7 +121,26 @@
   .ntl-input:focus { border-color: #00C2FF80; box-shadow: 0 0 0 3px #00C2FF15; }
   .ntl-input:read-only { opacity: .5; cursor: not-allowed; }
 
-  /* ── checkbox ───────────────────────────────── */
+  .ntl-select {
+    background: #111318;
+    border: 1px solid #1F2733;
+    border-radius: 8px;
+    color: #E2E8F0;
+    padding: 7px 32px 7px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238896A6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .ntl-select:focus { border-color: #00C2FF80; box-shadow: 0 0 0 3px #00C2FF15; }
+  .ntl-select option { background: #161B23; color: #E2E8F0; }
+
   .ntl-check {
     width: 18px; height: 18px;
     border: 2px solid #2D3748;
@@ -149,7 +161,6 @@
     height: 100%;
   }
 
-  /* ── button ─────────────────────────────────── */
   .btn-primary {
     background: linear-gradient(135deg, #00C2FF, #0090CC);
     color: #fff;
@@ -175,8 +186,19 @@
     transition: border-color .15s, color .15s;
   }
   .btn-ghost:hover { border-color: #2D3748; color: #E2E8F0; }
+  .btn-danger {
+    background: #FF475720;
+    color: #FF4757;
+    border: 1px solid #FF475740;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background .15s;
+  }
+  .btn-danger:hover { background: #FF475730; }
 
-  /* ── connection pill ─────────────────────────── */
   .conn-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
@@ -196,7 +218,6 @@
     50% { opacity:.4; }
   }
 
-  /* ── sync toast ──────────────────────────────── */
   .sync-toast {
     position: fixed; bottom: 24px; right: 24px;
     background: #161B23; border: 1px solid #00E5A040;
@@ -208,7 +229,6 @@
   }
   .sync-toast.show { transform: translateY(0); opacity: 1; }
 
-  /* ── stat number ─────────────────────────────── */
   .stat-num {
     font-size: 28px;
     font-weight: 800;
@@ -217,7 +237,6 @@
     font-family: 'Inter', sans-serif;
   }
 
-  /* ── bottleneck alert ────────────────────────── */
   .bottleneck-bar {
     background: linear-gradient(90deg, #FF475710, #FF475702);
     border-left: 3px solid #FF4757;
@@ -227,7 +246,6 @@
     color: #FF6B78;
   }
 
-  /* ── gate blocked ────────────────────────────── */
   .gate-blocked {
     background: #FF47571A;
     border: 1px solid #FF475740;
@@ -237,104 +255,128 @@
     color: #FF8B96;
   }
 
-  /* ── mode toggle ─────────────────────────────── */
-  .mode-toggle {
+  /* ── Mode pill (styled like conn status pill) ── */
+  .pill-btn {
+    display: inline-flex; align-items: center; gap: 6px;
     background: #111318;
     border: 1px solid #1F2733;
     border-radius: 8px;
-    display: flex;
-    overflow: hidden;
-  }
-  .mode-toggle button {
-    padding: 6px 16px;
-    font-size: 12px;
+    padding: 6px 14px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: .04em;
     text-transform: uppercase;
-    border: none;
     cursor: pointer;
-    transition: background .15s, color .15s;
+    color: #4A5568;
+    transition: background .15s, border-color .15s, color .15s;
   }
-  .mode-toggle button.active-mode {
-    background: #00C2FF20;
+  .pill-btn.active-mode {
+    background: #00C2FF18;
+    border-color: #00C2FF50;
     color: #00C2FF;
   }
-  .mode-toggle button:not(.active-mode) {
-    background: transparent;
-    color: #4A5568;
+  .pill-btn:hover:not(.active-mode) { border-color: #2D3748; color: #8896A6; }
+
+  .pill-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
   }
 
-  /* ── order tab ───────────────────────────────── */
-  .order-tab {
-    padding: 6px 16px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all .15s;
-  }
-  .order-tab.selected {
-    background: #00C2FF15;
-    border-color: #00C2FF40;
-    color: #00C2FF;
-  }
-  .order-tab:not(.selected) {
-    color: #4A5568;
-    border-color: #1F2733;
-  }
-  .order-tab:not(.selected):hover { color: #8896A6; border-color: #2D3748; }
+  /* ── lane status strip ── */
+  .lane-status { width: 3px; border-radius: 2px; flex-shrink: 0; }
 
-  /* ── lane status strip ───────────────────────── */
-  .lane-status {
-    width: 3px;
-    border-radius: 2px;
-    flex-shrink: 0;
+  /* ── size table ── */
+  .size-table input[type=number] {
+    background: #111318; border: 1px solid #1F2733; border-radius: 6px;
+    color: #E2E8F0; padding: 6px 8px; font-size: 13px; width: 80px; outline: none;
+    text-align: center; transition: border-color .15s;
+  }
+  .size-table input[type=number]:focus { border-color: #00C2FF80; }
+
+  /* ── loss row ── */
+  .loss-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* ── password overlay ── */
+  .pw-overlay {
+    position: fixed; inset: 0; background: rgba(10,12,16,.96);
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pw-box {
+    background: #161B23; border: 1px solid #2D3748;
+    border-radius: 16px; padding: 32px; width: 360px;
+    text-align: center;
   }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     TOP NAVIGATION BAR
-═══════════════════════════════════════════════════════════════ -->
+<!-- ═══ EDITOR PASSWORD OVERLAY ════════════════════════════════════ -->
+<div id="pwOverlay" class="pw-overlay" style="display:none;">
+  <div class="pw-box">
+    <div style="font-size:28px; margin-bottom:12px;">🔐</div>
+    <div style="font-size:18px; font-weight:800; margin-bottom:6px;">Editor Access</div>
+    <div style="font-size:13px; color:#8896A6; margin-bottom:20px;">Enter the editor password to make changes.</div>
+    <input id="pwInput" class="ntl-input" type="password" placeholder="Password…" style="margin-bottom:12px; text-align:center;" onkeydown="if(event.key==='Enter')checkPw()" />
+    <div id="pwErr" style="font-size:12px; color:#FF4757; margin-bottom:10px; min-height:16px;"></div>
+    <div style="display:flex; gap:8px;">
+      <button onclick="closePwOverlay()" class="btn-ghost" style="flex:1;">Cancel</button>
+      <button onclick="checkPw()" class="btn-primary" style="flex:1;">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOP NAVIGATION BAR ════════════════════════════════════════ -->
 <header style="background:#111318; border-bottom:1px solid #1F2733; position:sticky; top:0; z-index:800;">
-  <div style="max-width:1440px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; gap:16px;">
+  <div style="max-width:1600px; margin:0 auto; padding:0 20px; height:64px; display:flex; align-items:center; gap:14px;">
 
     <!-- Logo -->
     <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-        <rect width="32" height="32" rx="8" fill="#00C2FF15"/>
-        <path d="M8 10C8 10 12 8 16 8C20 8 24 10 24 10" stroke="#00C2FF" stroke-width="2" stroke-linecap="round"/>
-        <path d="M8 16C8 16 12 14 16 14C20 14 24 16 24 16" stroke="#00E5A0" stroke-width="2" stroke-linecap="round"/>
-        <path d="M8 22C8 22 12 20 16 20C20 20 24 22 24 22" stroke="#00C2FF" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="16" cy="16" r="2" fill="#00E5A0"/>
-      </svg>
+      <img src="data:image/png;base64,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" alt="NTL Logo" style="width:42px; height:42px; border-radius:50%; object-fit:cover;" />
       <div>
-        <div style="font-size:14px; font-weight:800; color:#E2E8F0; letter-spacing:-.01em;">NTL</div>
+        <div style="font-size:13px; font-weight:800; color:#E2E8F0; letter-spacing:-.01em;">Niagara Textiles</div>
         <div style="font-size:9px; font-weight:600; color:#4A5568; letter-spacing:.1em; text-transform:uppercase;">Production Command</div>
       </div>
     </div>
 
-    <div style="width:1px; height:28px; background:#1F2733;"></div>
+    <div style="width:1px; height:28px; background:#1F2733; flex-shrink:0;"></div>
 
-    <!-- Order Selector -->
-    <div style="display:flex; gap:6px; align-items:center; flex:1; overflow-x:auto;" id="orderTabs"></div>
+    <!-- Buyer + Style dropdowns -->
+    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+      <div style="display:flex; flex-direction:column; gap:2px;">
+        <span style="font-size:9px; color:#4A5568; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding-left:2px;">Buyer</span>
+        <select id="buyerSelect" class="ntl-select" onchange="onBuyerChange()" style="min-width:130px;"></select>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:2px;">
+        <span style="font-size:9px; color:#4A5568; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding-left:2px;">Style / Order</span>
+        <select id="styleSelect" class="ntl-select" onchange="onStyleChange()" style="min-width:160px;"></select>
+      </div>
+    </div>
+
+    <!-- Add Order button -->
+    <button onclick="openNewOrderModal()" style="background:#00E5A015; border:1px solid #00E5A030; border-radius:8px; padding:6px 12px; color:#00E5A0; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; flex-shrink:0;">＋ New Order</button>
 
     <div style="flex:1;"></div>
 
-    <!-- Connection Status -->
-    <div style="display:flex; align-items:center; gap:8px;">
-      <div style="display:flex; align-items:center; gap:6px; background:#111318; border:1px solid #1F2733; border-radius:8px; padding:6px 12px;">
-        <span class="conn-dot connecting" id="connDot"></span>
-        <span style="font-size:11px; font-weight:600; color:#8896A6;" id="connLabel">Connecting…</span>
-      </div>
+    <!-- Consumption + Calculator strip -->
+    <div id="consumptionStrip" style="display:flex; align-items:center; gap:10px; flex-shrink:0;"></div>
 
-      <!-- Mode Toggle -->
-      <div class="mode-toggle">
-        <button onclick="setMode('viewer')" id="btnViewer">👁 Viewer</button>
-        <button onclick="setMode('editor')" id="btnEditor">✏️ Editor</button>
-      </div>
+    <!-- Connection Status -->
+    <div style="display:flex; align-items:center; gap:6px; background:#111318; border:1px solid #1F2733; border-radius:8px; padding:6px 12px; flex-shrink:0;">
+      <span class="conn-dot connecting" id="connDot"></span>
+      <span style="font-size:11px; font-weight:600; color:#8896A6;" id="connLabel">Connecting…</span>
+    </div>
+
+    <!-- Mode Toggle — pill style like conn status -->
+    <div style="display:flex; gap:6px; flex-shrink:0;">
+      <button class="pill-btn active-mode" id="btnViewer" onclick="setMode('viewer')">
+        <span class="pill-dot" style="background:#00E5A0; box-shadow:0 0 5px #00E5A060;"></span>
+        Viewer
+      </button>
+      <button class="pill-btn" id="btnEditor" onclick="requestEditorMode()">
+        <span class="pill-dot" id="editorDot" style="background:#4A5568;"></span>
+        Editor
+      </button>
     </div>
 
     <!-- Session Token -->
@@ -350,29 +392,114 @@
   </div>
 </header>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     MAIN CONTENT
-═══════════════════════════════════════════════════════════════ -->
-<main style="max-width:1440px; margin:0 auto; padding:24px;">
-
-  <!-- KPI Strip -->
+<!-- ═══ MAIN CONTENT ══════════════════════════════════════════════ -->
+<main style="max-width:1600px; margin:0 auto; padding:24px;">
   <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:24px;" id="kpiStrip"></div>
-
-  <!-- Department Lanes -->
   <div style="display:flex; flex-direction:column; gap:10px;" id="deptLanes"></div>
-
 </main>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     ENTRY MODAL
-═══════════════════════════════════════════════════════════════ -->
+<!-- ═══ ENTRY MODAL ══════════════════════════════════════════════ -->
 <div class="modal-overlay" id="entryModal">
   <div class="modal-box">
     <div id="modalContent"></div>
   </div>
 </div>
 
-<!-- Sync Config Modal -->
+<!-- ═══ NEW ORDER MODAL ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="newOrderModal">
+  <div class="modal-box" style="max-width:580px;">
+    <div style="padding:28px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
+        <div>
+          <div style="font-size:20px; font-weight:800;">＋ New Order</div>
+          <div style="font-size:12px; color:#8896A6; margin-top:2px;">Enter order details below</div>
+        </div>
+        <button onclick="closeNewOrderModal()" style="background:#1F2733; border:none; color:#8896A6; cursor:pointer; border-radius:8px; width:32px; height:32px; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Buyer Name *</label>
+          <input id="no_buyer" class="ntl-input" type="text" placeholder="e.g. Alpine Trek Co." />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Item / Style *</label>
+          <input id="no_item" class="ntl-input" type="text" placeholder="e.g. Hoodie, Trousers…" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Style Code</label>
+          <input id="no_style" class="ntl-input" type="text" placeholder="e.g. HD-2025-BLK" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Color</label>
+          <input id="no_color" class="ntl-input" type="text" placeholder="e.g. Navy Blue" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Order Number *</label>
+          <input id="no_ordnum" class="ntl-input" type="text" placeholder="e.g. ORD-004" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Ship Date</label>
+          <input id="no_ship" class="ntl-input" type="date" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Order Qty (pcs)</label>
+          <input id="no_qty" class="ntl-input" type="number" min="0" value="0" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#00C2FF; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Consumption (g/pc)</label>
+          <input id="no_consumption" class="ntl-input" type="number" min="0" step="0.01" value="0" />
+        </div>
+      </div>
+
+      <!-- Size breakdown -->
+      <div style="margin-bottom:20px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em;">Size-wise Quantities</label>
+          <button onclick="addSizeRow()" style="background:#00C2FF15; border:1px solid #00C2FF30; border-radius:6px; padding:4px 10px; color:#00C2FF; font-size:11px; font-weight:700; cursor:pointer;">＋ Add Size</button>
+        </div>
+        <div id="sizeRows" style="display:flex; flex-direction:column; gap:8px;"></div>
+      </div>
+
+      <div id="noErr" style="font-size:12px; color:#FF4757; margin-bottom:12px; min-height:16px;"></div>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="closeNewOrderModal()" class="btn-ghost">Cancel</button>
+        <button onclick="saveNewOrder()" class="btn-primary">Create Order</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CALC MODAL ════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="calcModal">
+  <div class="modal-box" style="max-width:420px;">
+    <div style="padding:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <div style="font-size:18px; font-weight:800;">🧮 Fabric Calculator</div>
+        <button onclick="closeCalcModal()" style="background:#1F2733; border:none; color:#8896A6; cursor:pointer; border-radius:8px; width:32px; height:32px; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+      </div>
+      <div style="font-size:12px; color:#8896A6; margin-bottom:16px; background:#111318; border-radius:8px; padding:12px;">
+        Formula: <strong style="color:#00C2FF;">Pieces = (Fabric KG × 1000) ÷ Consumption (g/pc)</strong>
+      </div>
+      <div style="display:grid; gap:12px; margin-bottom:16px;">
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Fabric Weight (KG)</label>
+          <input id="calc_kg" class="ntl-input" type="number" min="0" step="0.01" value="0" oninput="calcFabric()" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Consumption (g/pc)</label>
+          <input id="calc_cons" class="ntl-input" type="number" min="0" step="0.01" value="0" oninput="calcFabric()" />
+        </div>
+      </div>
+      <div style="background:#00C2FF0A; border:1px solid #00C2FF30; border-radius:10px; padding:16px; text-align:center;">
+        <div style="font-size:11px; color:#8896A6; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Estimated Pieces</div>
+        <div id="calc_result" style="font-size:32px; font-weight:800; color:#00C2FF;">0</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SYNC MODAL ════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="syncModal">
   <div class="modal-box" style="max-width:480px;">
     <div style="padding:24px;">
@@ -380,7 +507,7 @@
         <h2 style="font-size:18px; font-weight:800;">⟳ Sync Session</h2>
         <button onclick="closeSyncModal()" style="background:none; border:none; color:#4A5568; cursor:pointer; font-size:20px;">×</button>
       </div>
-      <p style="font-size:13px; color:#8896A6; margin-bottom:16px;">Share the token below so collaborators see your live session. Paste someone else's token to join their session.</p>
+      <p style="font-size:13px; color:#8896A6; margin-bottom:16px;">Share your token so collaborators can join your live session in <strong style="color:#E2E8F0;">Viewer mode</strong>. They will need the editor password to make changes.</p>
       <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Current Session Token</label>
       <div style="display:flex; gap:8px; margin-bottom:16px;">
         <input id="tokenDisplay" class="ntl-input" readonly style="font-family:'JetBrains Mono',monospace; font-size:12px;" />
@@ -390,6 +517,9 @@
       <div style="display:flex; gap:8px; margin-bottom:16px;">
         <input id="joinTokenInput" class="ntl-input" placeholder="Paste session token…" style="font-family:'JetBrains Mono',monospace; font-size:12px;" />
         <button onclick="joinSession()" class="btn-primary" style="flex-shrink:0;">Join</button>
+      </div>
+      <div style="background:#FFB02010; border:1px solid #FFB02030; border-radius:8px; padding:10px 14px; margin-bottom:16px; font-size:12px; color:#FFB020;">
+        ⚠ When joining a session you will enter as <strong>Viewer</strong>. Request the editor password from the session owner to make edits.
       </div>
       <hr style="border:none; border-top:1px solid #1F2733; margin:16px 0;" />
       <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Manual State Export / Import</label>
@@ -405,209 +535,134 @@
 <!-- Toast -->
 <div class="sync-toast" id="syncToast"></div>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     APPLICATION JAVASCRIPT
-═══════════════════════════════════════════════════════════════ -->
 <script>
 'use strict';
 
-/* ── DEPARTMENTS DEFINITION ─────────────────────────────────────── */
+/* ── EDITOR PASSWORD ─────────────────────────────────────────────── */
+const EDITOR_PASSWORD = 'ntl2025'; // Change this to your preferred password
+
+function requestEditorMode() {
+  if (appState.mode === 'editor') return;
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwErr').textContent = '';
+  document.getElementById('pwOverlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('pwInput').focus(), 50);
+}
+
+function checkPw() {
+  const val = document.getElementById('pwInput').value;
+  if (val === EDITOR_PASSWORD) {
+    closePwOverlay();
+    setMode('editor');
+    showToast('✏️ Editor mode unlocked');
+  } else {
+    document.getElementById('pwErr').textContent = 'Incorrect password. Try again.';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function closePwOverlay() {
+  document.getElementById('pwOverlay').style.display = 'none';
+}
+
+/* ── DEPARTMENTS ──────────────────────────────────────────────────── */
+// Units: yarn=KG, knitting=KG, dyeing=KG, finishing=KG, cutting+=pcs
+const DEPT_UNIT = {
+  yarn: 'KG', knitting: 'KG', dyeing: 'KG', finishing: 'KG',
+  cutting: 'pcs', printing: 'pcs', sewing: 'pcs', ironing: 'pcs', packaging: 'pcs'
+};
+
 const DEPARTMENTS = [
   {
-    id: 'yarn',
-    label: 'Yarn Receiving',
-    short: 'YARN',
-    color: '#A78BFA',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <ellipse cx="24" cy="24" rx="14" ry="10" stroke="currentColor" stroke-width="2"/>
-      <ellipse cx="24" cy="24" rx="8" ry="5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
-      <path d="M10 24 C10 18 17 12 24 12 C31 12 38 18 38 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M24 14 C20 16 18 20 18 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <rect x="20" y="30" width="8" height="8" rx="2" fill="currentColor" opacity=".3"/>
-      <rect x="21" y="31" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1"/>
-    </svg>`,
-    gates: [],
-    prevDept: null,
-    nextDept: 'knitting',
+    id: 'yarn', label: 'Yarn Receiving', short: 'YARN', color: '#A78BFA',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><ellipse cx="24" cy="24" rx="14" ry="10" stroke="currentColor" stroke-width="2"/><ellipse cx="24" cy="24" rx="8" ry="5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/><path d="M10 24 C10 18 17 12 24 12 C31 12 38 18 38 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 14 C20 16 18 20 18 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="20" y="30" width="8" height="8" rx="2" fill="currentColor" opacity=".3"/><rect x="21" y="31" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1"/></svg>`,
+    gates: [], prevDept: null, nextDept: 'knitting',
   },
   {
-    id: 'knitting',
-    label: 'Knitting',
-    short: 'KNIT',
-    color: '#60A5FA',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <rect x="12" y="8" width="24" height="32" rx="12" stroke="currentColor" stroke-width="2"/>
-      <circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M24 8 L24 18" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M24 30 L24 40" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M12 24 L18 24" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M30 24 L36 24" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="24" cy="24" r="2" fill="currentColor"/>
-    </svg>`,
+    id: 'knitting', label: 'Knitting', short: 'KNIT', color: '#60A5FA',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="12" y="8" width="24" height="32" rx="12" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M24 8 L24 18" stroke="currentColor" stroke-width="1.5"/><path d="M24 30 L24 40" stroke="currentColor" stroke-width="1.5"/><path d="M12 24 L18 24" stroke="currentColor" stroke-width="1.5"/><path d="M30 24 L36 24" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="24" r="2" fill="currentColor"/></svg>`,
     gates: [
       { id: 'g_knit_1', label: 'Yarn quality test passed (GSM check)', required: true },
       { id: 'g_knit_2', label: 'Machine gauge set per buyer spec', required: true },
     ],
-    prevDept: 'yarn',
-    nextDept: 'dyeing',
+    prevDept: 'yarn', nextDept: 'dyeing',
   },
   {
-    id: 'dyeing',
-    label: 'Dyeing',
-    short: 'DYE',
-    color: '#F472B6',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <rect x="10" y="14" width="28" height="26" rx="6" stroke="currentColor" stroke-width="2"/>
-      <rect x="14" y="10" width="20" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M18 28 C18 25 22 23 24 26 C26 29 30 27 30 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="24" cy="34" r="2" fill="currentColor" opacity=".5"/>
-      <path d="M20 8 L20 4 M24 8 L24 4 M28 8 L28 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>`,
+    id: 'dyeing', label: 'Dyeing', short: 'DYE', color: '#F472B6',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="10" y="14" width="28" height="26" rx="6" stroke="currentColor" stroke-width="2"/><rect x="14" y="10" width="20" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M18 28 C18 25 22 23 24 26 C26 29 30 27 30 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="24" cy="34" r="2" fill="currentColor" opacity=".5"/><path d="M20 8 L20 4 M24 8 L24 4 M28 8 L28 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
     gates: [
       { id: 'g_dye_1', label: 'Colour standard (lab dip) approved by Buyer', required: true },
       { id: 'g_dye_2', label: 'Dyeing recipe formula card issued', required: true },
     ],
-    prevDept: 'knitting',
-    nextDept: 'finishing',
+    prevDept: 'knitting', nextDept: 'finishing',
   },
   {
-    id: 'finishing',
-    label: 'Dyeing-Finishing',
-    short: 'FIN',
-    color: '#34D399',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <rect x="6" y="18" width="36" height="14" rx="4" stroke="currentColor" stroke-width="2"/>
-      <circle cx="10" cy="25" r="4" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="38" cy="25" r="4" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M14 22 L34 22" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M14 28 L34 28" stroke="currentColor" stroke-width="1.5"/>
-      <rect x="20" y="32" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/>
-    </svg>`,
+    id: 'finishing', label: 'Dyeing-Finishing', short: 'FIN', color: '#34D399',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="6" y="18" width="36" height="14" rx="4" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="25" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="38" cy="25" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M14 22 L34 22" stroke="currentColor" stroke-width="1.5"/><path d="M14 28 L34 28" stroke="currentColor" stroke-width="1.5"/><rect x="20" y="32" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>`,
     gates: [
       { id: 'g_fin_1', label: 'Shade/wash fastness report within tolerance', required: true },
       { id: 'g_fin_2', label: 'Shrinkage % accepted per buyer wash care', required: true },
     ],
-    prevDept: 'dyeing',
-    nextDept: 'cutting',
+    prevDept: 'dyeing', nextDept: 'cutting',
   },
   {
-    id: 'cutting',
-    label: 'Cutting',
-    short: 'CUT',
-    color: '#FBBF24',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <rect x="8" y="30" width="32" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
-      <path d="M16 30 L16 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M24 30 L24 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M32 30 L32 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      <path d="M14 10 L18 10 L16 16 Z" fill="currentColor" opacity=".7"/>
-      <path d="M22 8 L26 8 L24 14 Z" fill="currentColor" opacity=".7"/>
-      <path d="M30 12 L34 12 L32 18 Z" fill="currentColor" opacity=".7"/>
-    </svg>`,
+    id: 'cutting', label: 'Cutting', short: 'CUT', color: '#FBBF24',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="8" y="30" width="32" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M16 30 L16 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M24 30 L24 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M32 30 L32 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 10 L18 10 L16 16 Z" fill="currentColor" opacity=".7"/><path d="M22 8 L26 8 L24 14 Z" fill="currentColor" opacity=".7"/><path d="M30 12 L34 12 L32 18 Z" fill="currentColor" opacity=".7"/></svg>`,
     gates: [
       { id: 'g_cut_1', label: 'Approved size set sample verified', required: true },
       { id: 'g_cut_2', label: 'CAD marker plan approved and printed', required: true },
       { id: 'g_cut_3', label: 'Trim store issued accessory BOM', required: false },
     ],
-    prevDept: 'finishing',
-    nextDept: 'printing',
+    prevDept: 'finishing', nextDept: 'printing',
   },
   {
-    id: 'printing',
-    label: 'Printing',
-    short: 'PRNT',
-    color: '#F97316',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2"/>
-      <line x1="24" y1="10" x2="24" y2="38" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="10" y1="24" x2="38" y2="24" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="14" y1="14" x2="34" y2="34" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="34" y1="14" x2="14" y2="34" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="24" cy="24" r="4" fill="currentColor" opacity=".25"/>
-      <circle cx="24" cy="24" r="2" fill="currentColor"/>
-    </svg>`,
+    id: 'printing', label: 'Printing', short: 'PRNT', color: '#F97316',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><circle cx="24" cy="24" r="14" stroke="currentColor" stroke-width="2"/><line x1="24" y1="10" x2="24" y2="38" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="24" x2="38" y2="24" stroke="currentColor" stroke-width="1.5"/><line x1="14" y1="14" x2="34" y2="34" stroke="currentColor" stroke-width="1.5"/><line x1="34" y1="14" x2="14" y2="34" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="24" r="4" fill="currentColor" opacity=".25"/><circle cx="24" cy="24" r="2" fill="currentColor"/></svg>`,
     gates: [
       { id: 'g_prnt_1', label: 'Merchandiser Work Order issued for Printing', required: true },
       { id: 'g_prnt_2', label: 'Buyer Print Approval & Artwork Instruction signed off', required: true },
       { id: 'g_prnt_3', label: 'Print Strike-Off approved by QC', required: true },
     ],
-    prevDept: 'cutting',
-    nextDept: 'sewing',
+    prevDept: 'cutting', nextDept: 'sewing',
   },
   {
-    id: 'sewing',
-    label: 'Sewing',
-    short: 'SEW',
-    color: '#06B6D4',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <path d="M8 36 L16 20 L24 28 L32 12 L40 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <rect x="6" y="34" width="36" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="20" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="20" cy="16" r="1" fill="currentColor"/>
-      <path d="M20 13 L20 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>`,
+    id: 'sewing', label: 'Sewing', short: 'SEW', color: '#06B6D4',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M8 36 L16 20 L24 28 L32 12 L40 28" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="34" width="36" height="6" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="16" r="1" fill="currentColor"/><path d="M20 13 L20 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
     gates: [
       { id: 'g_sew_1', label: 'Approved pre-production sample (PPS) passed QC', required: true },
       { id: 'g_sew_2', label: 'Line balancing sheet issued by IE dept', required: true },
     ],
-    prevDept: 'printing',
-    nextDept: 'ironing',
+    prevDept: 'printing', nextDept: 'ironing',
   },
   {
-    id: 'ironing',
-    label: 'Ironing & QC',
-    short: 'IRON',
-    color: '#818CF8',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <path d="M8 32 L16 22 L36 22 L40 32 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M8 32 L40 32" stroke="currentColor" stroke-width="2"/>
-      <rect x="20" y="16" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="12" cy="36" r="3" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="36" cy="36" r="3" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M18 36 L30 36" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M26 26 L26 22 M30 28 L34 24 M22 28 L18 24" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".5"/>
-    </svg>`,
+    id: 'ironing', label: 'Ironing & QC', short: 'IRON', color: '#818CF8',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M8 32 L16 22 L36 22 L40 32 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 32 L40 32" stroke="currentColor" stroke-width="2"/><rect x="20" y="16" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="36" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="36" cy="36" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M18 36 L30 36" stroke="currentColor" stroke-width="1.5"/><path d="M26 26 L26 22 M30 28 L34 24 M22 28 L18 24" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".5"/></svg>`,
     gates: [
       { id: 'g_iron_1', label: 'Final Inspection (AQL 2.5) pass sheet signed', required: true },
       { id: 'g_iron_2', label: 'Measurement report within 1cm tolerance', required: true },
     ],
-    prevDept: 'sewing',
-    nextDept: 'packaging',
+    prevDept: 'sewing', nextDept: 'packaging',
   },
   {
-    id: 'packaging',
-    label: 'Packaging',
-    short: 'PACK',
-    color: '#10B981',
-    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-      <rect x="8" y="20" width="32" height="22" rx="3" stroke="currentColor" stroke-width="2"/>
-      <path d="M8 26 L40 26" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M24 26 L24 42" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M16 8 L8 20 L40 20 L32 8 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M24 8 L24 20" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M18 30 L30 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M18 34 L26 34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>`,
+    id: 'packaging', label: 'Packaging', short: 'PACK', color: '#10B981',
+    icon: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><rect x="8" y="20" width="32" height="22" rx="3" stroke="currentColor" stroke-width="2"/><path d="M8 26 L40 26" stroke="currentColor" stroke-width="1.5"/><path d="M24 26 L24 42" stroke="currentColor" stroke-width="1.5"/><path d="M16 8 L8 20 L40 20 L32 8 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M24 8 L24 20" stroke="currentColor" stroke-width="1.5"/><path d="M18 30 L30 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M18 34 L26 34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
     gates: [
       { id: 'g_pack_1', label: 'Buyer packing instruction & sticker artwork approved', required: true },
       { id: 'g_pack_2', label: 'Carton measurement and weight within freight tolerance', required: true },
       { id: 'g_pack_3', label: 'Pre-shipment inspection (PSI) booking confirmed', required: true },
     ],
-    prevDept: 'ironing',
-    nextDept: null,
+    prevDept: 'ironing', nextDept: null,
   },
 ];
 
-/* ── INITIAL ORDERS STATE ───────────────────────────────────────── */
-function makeOrderState(orderQty) {
+/* ── MAKE ORDER STATE ─────────────────────────────────────────────── */
+function makeOrderState() {
   const state = {};
-  DEPARTMENTS.forEach((d, idx) => {
+  DEPARTMENTS.forEach(d => {
     state[d.id] = {
-      received:  idx === 0 ? orderQty : 0,
-      wip:       0,
-      output:    0,
-      alt:       0,
-      rejected:  0,
+      received: 0, wip: 0, output: 0, alt: 0, rejected: 0,
+      plannedLoss: 0, actualLoss: 0,
       gateChecks: {},
     };
     d.gates.forEach(g => { state[d.id].gateChecks[g.id] = false; });
@@ -615,173 +670,185 @@ function makeOrderState(orderQty) {
   return state;
 }
 
+/* ── INITIAL ORDERS ───────────────────────────────────────────────── */
 const INITIAL_ORDERS = [
   {
-    id: 'ORD-001',
-    buyer: "Fuel'd Fans",
-    item: 'Polo Shirt',
-    style: 'PS-2024-BLK',
-    color: 'Jet Black',
-    qty: 5000,
-    shipDate: '2025-09-15',
-    state: makeOrderState(5000),
+    id: 'ORD-001', buyer: "Fuel'd Fans", item: 'Polo Shirt',
+    style: 'PS-2024-BLK', color: 'Jet Black', qty: 0, shipDate: '2025-09-15',
+    consumption: 0,
+    sizes: [
+      { size: 'S', qty: 0 }, { size: 'M', qty: 0 },
+      { size: 'L', qty: 0 }, { size: 'XL', qty: 0 },
+    ],
+    state: makeOrderState(),
   },
   {
-    id: 'ORD-002',
-    buyer: 'Alpine Trek Co.',
-    item: 'Fleece Jacket',
-    style: 'FJ-2024-NVY',
-    color: 'Navy Blue',
-    qty: 3200,
-    shipDate: '2025-10-02',
-    state: makeOrderState(3200),
+    id: 'ORD-002', buyer: 'Alpine Trek Co.', item: 'Fleece Jacket',
+    style: 'FJ-2024-NVY', color: 'Navy Blue', qty: 0, shipDate: '2025-10-02',
+    consumption: 0,
+    sizes: [
+      { size: 'S', qty: 0 }, { size: 'M', qty: 0 },
+      { size: 'L', qty: 0 }, { size: 'XL', qty: 0 },
+    ],
+    state: makeOrderState(),
   },
   {
-    id: 'ORD-003',
-    buyer: 'Urban Layers',
-    item: 'T-Shirt (Basic)',
-    style: 'TS-2024-WHT',
-    color: 'White',
-    qty: 8500,
-    shipDate: '2025-08-28',
-    state: makeOrderState(8500),
+    id: 'ORD-003', buyer: 'Urban Layers', item: 'T-Shirt (Basic)',
+    style: 'TS-2024-WHT', color: 'White', qty: 0, shipDate: '2025-08-28',
+    consumption: 0,
+    sizes: [
+      { size: 'XS', qty: 0 }, { size: 'S', qty: 0 },
+      { size: 'M', qty: 0 }, { size: 'L', qty: 0 }, { size: 'XL', qty: 0 },
+    ],
+    state: makeOrderState(),
   },
 ];
 
-/* ── APP STATE ─────────────────────────────────────────────────── */
+/* ── APP STATE ───────────────────────────────────────────────────── */
 let appState = {
   orders: JSON.parse(JSON.stringify(INITIAL_ORDERS)),
   selectedOrderId: 'ORD-001',
-  mode: 'editor',
+  mode: 'viewer',
   sessionId: generateSessionId(),
 };
 
-let mqttClient = null;
-let mqttConnected = false;
-let modalDeptId = null;
+// Persist to localStorage
+function persistState() {
+  try { localStorage.setItem('ntl_appstate', JSON.stringify(appState)); } catch(e) {}
+}
+function loadPersistedState() {
+  try {
+    const s = localStorage.getItem('ntl_appstate');
+    if (s) {
+      const parsed = JSON.parse(s);
+      appState.orders = parsed.orders || appState.orders;
+      appState.selectedOrderId = parsed.selectedOrderId || appState.selectedOrderId;
+    }
+  } catch(e) {}
+}
 
-/* ── SESSION / SYNC UTILITIES ──────────────────────────────────── */
+let mqttClient = null, mqttConnected = false, modalDeptId = null;
+
+/* ── SESSION UTILITIES ───────────────────────────────────────────── */
 function generateSessionId() {
   return 'NTL-' + Math.random().toString(36).substr(2, 8).toUpperCase();
 }
-
 function getOrder() {
   return appState.orders.find(o => o.id === appState.selectedOrderId);
 }
 
-function getDeptState(deptId) {
-  return getOrder().state[deptId];
-}
-
-function getSelectedOrderIdx() {
-  return appState.orders.findIndex(o => o.id === appState.selectedOrderId);
-}
-
-/* ── MQTT REAL-TIME SYNC ─────────────────────────────────────────
-   Uses broker.hivemq.com public WebSocket MQTT broker.
-   Topic: ntl/<sessionId>/state
-   Each editor publishes full state on any change.
-   Viewers subscribe and update their local state.
-────────────────────────────────────────────────────────────────── */
+/* ── MQTT ────────────────────────────────────────────────────────── */
 function initMQTT() {
   try {
-    // MQTT.js loaded via CDN in body
     const topic = `ntl/${appState.sessionId}/state`;
-    const brokerURL = 'wss://broker.hivemq.com:8884/mqtt';
-
-    mqttClient = mqtt.connect(brokerURL, {
+    mqttClient = mqtt.connect('wss://broker.hivemq.com:8884/mqtt', {
       clientId: 'ntl_' + Math.random().toString(36).substr(2, 8),
-      clean: true,
-      reconnectPeriod: 3000,
-      connectTimeout: 8000,
+      clean: true, reconnectPeriod: 3000, connectTimeout: 8000,
     });
-
     mqttClient.on('connect', () => {
       mqttConnected = true;
       setConnStatus('connected', 'Live');
       mqttClient.subscribe(topic, { qos: 0 });
     });
-
     mqttClient.on('message', (t, payload) => {
       try {
         const incoming = JSON.parse(payload.toString());
-        // Ignore our own publishes
         if (incoming._client === mqttClient.options.clientId) return;
-        mergeRemoteState(incoming);
+        appState.orders = incoming.orders;
+        persistState();
+        showToast('🔄 State synced from remote');
+        render();
       } catch(_) {}
     });
-
     mqttClient.on('error', () => setConnStatus('disconnected', 'Offline'));
     mqttClient.on('offline', () => setConnStatus('disconnected', 'Offline'));
     mqttClient.on('reconnect', () => setConnStatus('connecting', 'Reconnecting…'));
-
-  } catch(e) {
-    setConnStatus('disconnected', 'Offline');
-  }
+  } catch(e) { setConnStatus('disconnected', 'Offline'); }
 }
 
 function publishState() {
   if (!mqttClient || !mqttConnected) return;
   const topic = `ntl/${appState.sessionId}/state`;
-  const payload = JSON.stringify({
-    ...appState,
+  mqttClient.publish(topic, JSON.stringify({
+    orders: appState.orders,
     _client: mqttClient.options.clientId,
     _ts: Date.now(),
-  });
-  mqttClient.publish(topic, payload, { qos: 0 });
-}
-
-function mergeRemoteState(incoming) {
-  appState.orders = incoming.orders;
-  showToast('🔄 State synced from remote collaborator');
-  render();
+  }), { qos: 0 });
 }
 
 function setConnStatus(state, label) {
-  const dot = document.getElementById('connDot');
-  const lbl = document.getElementById('connLabel');
-  dot.className = `conn-dot ${state}`;
-  lbl.textContent = label + (appState.mode === 'editor' ? ' · Editor' : ' · Viewer');
+  document.getElementById('connDot').className = `conn-dot ${state}`;
+  document.getElementById('connLabel').textContent = label + (appState.mode === 'editor' ? ' · Editor' : ' · Viewer');
 }
 
 /* ── RENDER ENGINE ──────────────────────────────────────────────── */
 function render() {
-  renderOrderTabs();
+  renderDropdowns();
+  renderConsumptionStrip();
   renderKPIs();
   renderLanes();
 }
 
-function renderOrderTabs() {
-  const container = document.getElementById('orderTabs');
-  container.innerHTML = appState.orders.map(o => `
-    <button class="order-tab ${o.id === appState.selectedOrderId ? 'selected' : ''}"
-            onclick="selectOrder('${o.id}')">
-      <span style="font-size:9px; color:inherit; opacity:.6; display:block;">${o.buyer}</span>
-      ${o.item} · ${o.id}
-    </button>
-  `).join('');
+function renderDropdowns() {
+  const buyers = [...new Set(appState.orders.map(o => o.buyer))];
+  const currentOrder = getOrder();
+  const currentBuyer = currentOrder ? currentOrder.buyer : buyers[0];
+
+  const bs = document.getElementById('buyerSelect');
+  bs.innerHTML = buyers.map(b => `<option value="${b}" ${b===currentBuyer?'selected':''}>${b}</option>`).join('');
+
+  const buyerOrders = appState.orders.filter(o => o.buyer === currentBuyer);
+  const ss = document.getElementById('styleSelect');
+  ss.innerHTML = buyerOrders.map(o => `<option value="${o.id}" ${o.id===appState.selectedOrderId?'selected':''}>${o.item} · ${o.id}</option>`).join('');
+}
+
+function onBuyerChange() {
+  const buyer = document.getElementById('buyerSelect').value;
+  const firstOrder = appState.orders.find(o => o.buyer === buyer);
+  if (firstOrder) {
+    appState.selectedOrderId = firstOrder.id;
+    render();
+  }
+}
+
+function onStyleChange() {
+  appState.selectedOrderId = document.getElementById('styleSelect').value;
+  render();
+}
+
+function renderConsumptionStrip() {
+  const order = getOrder();
+  if (!order) return;
+  const cons = order.consumption || 0;
+  const strip = document.getElementById('consumptionStrip');
+  strip.innerHTML = `
+    <div style="background:#111318; border:1px solid #1F2733; border-radius:8px; padding:6px 12px; display:flex; align-items:center; gap:8px;">
+      <span style="font-size:9px; color:#4A5568; font-weight:700; text-transform:uppercase; letter-spacing:.06em;">Consumption</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:#00C2FF;">${cons > 0 ? cons.toLocaleString() : '—'} g/pc</span>
+    </div>
+    <button onclick="openCalcModal()" style="background:#00C2FF15; border:1px solid #00C2FF30; border-radius:8px; padding:6px 12px; color:#00C2FF; font-size:11px; font-weight:700; cursor:pointer;" title="Open fabric calculator">🧮 Calc</button>
+  `;
 }
 
 function renderKPIs() {
   const order = getOrder();
+  if (!order) return;
   const totalQty = order.qty;
   const deptStates = Object.values(order.state);
-
   const totalOutput = order.state['packaging'].output;
-  const totalAlt    = deptStates.reduce((s, d) => s + (d.alt || 0), 0);
-  const totalRej    = deptStates.reduce((s, d) => s + (d.rejected || 0), 0);
+  const totalAlt = deptStates.reduce((s, d) => s + (d.alt || 0), 0);
+  const totalRej = deptStates.reduce((s, d) => s + (d.rejected || 0), 0);
 
-  // Find active stage (deepest dept with output > 0 or received > 0)
   let activeStage = DEPARTMENTS[0].label;
   for (let i = DEPARTMENTS.length - 1; i >= 0; i--) {
     const ds = order.state[DEPARTMENTS[i].id];
-    if (ds.received > 0 || ds.output > 0) { activeStage = DEPARTMENTS[i].label; break; }
+    if ((ds.received || 0) > 0 || (ds.output || 0) > 0) { activeStage = DEPARTMENTS[i].label; break; }
   }
-
-  const shipPct = Math.round((totalOutput / totalQty) * 100);
+  const shipPct = totalQty > 0 ? Math.round((totalOutput / totalQty) * 100) : 0;
+  const totalSizeQty = order.sizes ? order.sizes.reduce((s, r) => s + (r.qty || 0), 0) : 0;
 
   const kpis = [
-    { label: 'Order Qty', value: totalQty.toLocaleString(), sub: order.item, color: '#00C2FF' },
+    { label: 'Order Qty (pcs)', value: totalQty.toLocaleString(), sub: `${order.sizes ? order.sizes.length : 0} sizes · ${totalSizeQty.toLocaleString()} declared`, color: '#00C2FF' },
     { label: 'Ready to Ship', value: totalOutput.toLocaleString(), sub: `${shipPct}% complete`, color: '#00E5A0' },
     { label: 'Alterations', value: totalAlt.toLocaleString(), sub: 'Across all stages', color: '#FFB020' },
     { label: 'Rejected', value: totalRej.toLocaleString(), sub: 'Total defects', color: '#FF4757' },
@@ -799,52 +866,49 @@ function renderKPIs() {
 
 function renderLanes() {
   const order = getOrder();
-  document.getElementById('deptLanes').innerHTML = DEPARTMENTS.map((dept, idx) => {
+  if (!order) return;
+  document.getElementById('deptLanes').innerHTML = DEPARTMENTS.map(dept => {
     const ds = order.state[dept.id];
-    const pct = order.qty > 0 ? Math.min(100, Math.round((ds.output / order.qty) * 100)) : 0;
-    const recvPct = order.qty > 0 ? Math.min(100, Math.round((ds.received / order.qty) * 100)) : 0;
-
-    // Determine if this dept is bottlenecked
+    const unit = DEPT_UNIT[dept.id];
+    const refQty = unit === 'KG' ? (order.qty > 0 && order.consumption > 0 ? Math.round(order.qty * order.consumption / 1000) : 0) : order.qty;
+    const pct = refQty > 0 ? Math.min(100, Math.round(((ds.output || 0) / refQty) * 100)) : 0;
     const allGatesPassed = dept.gates.filter(g => g.required).every(g => ds.gateChecks[g.id]);
-    const prevDeptOutput = dept.prevDept ? order.state[dept.prevDept].output : order.qty;
-    const isBlocked = dept.prevDept && !allGatesPassed && ds.received < prevDeptOutput;
-    const isActive  = ds.received > 0 && pct < 100;
-    const isDone    = pct === 100;
-
+    const prevOutput = dept.prevDept ? (order.state[dept.prevDept].output || 0) : refQty;
+    const isBlocked = dept.prevDept && !allGatesPassed && (ds.received || 0) < prevOutput;
+    const isActive = (ds.received || 0) > 0 && pct < 100;
+    const isDone = pct === 100;
     const statusColor = isDone ? '#00E5A0' : isBlocked ? '#FF4757' : isActive ? '#00C2FF' : '#4A5568';
     const statusLabel = isDone ? 'Complete' : isBlocked ? 'Blocked' : isActive ? 'In Progress' : 'Pending';
-    const statusBg    = isDone ? '#00E5A020' : isBlocked ? '#FF475720' : isActive ? '#00C2FF20' : '#1F273380';
+    const statusBg = isDone ? '#00E5A020' : isBlocked ? '#FF475720' : isActive ? '#00C2FF20' : '#1F273380';
+    const lossActual = ds.actualLoss || 0;
+    const lossPlanned = ds.plannedLoss || 0;
 
     return `
     <div class="dept-lane" onclick="openModal('${dept.id}')" style="padding:16px 20px;">
       <div style="display:flex; align-items:center; gap:16px;">
-
-        <!-- Icon -->
-        <div style="width:48px; height:48px; flex-shrink:0; color:${dept.color}; opacity:.85; background:${dept.color}15; border-radius:10px; padding:8px;">
-          ${dept.icon}
-        </div>
-
-        <!-- Dept name + status -->
+        <div style="width:48px; height:48px; flex-shrink:0; color:${dept.color}; opacity:.85; background:${dept.color}15; border-radius:10px; padding:8px;">${dept.icon}</div>
         <div style="min-width:160px; flex-shrink:0;">
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
             <span style="font-size:14px; font-weight:700; color:#E2E8F0;">${dept.label}</span>
+            <span style="font-size:9px; color:#4A5568; font-weight:700; text-transform:uppercase; letter-spacing:.06em; background:#1F273380; padding:2px 6px; border-radius:4px;">${unit}</span>
           </div>
           <div style="display:flex; align-items:center; gap:6px;">
             <span style="font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:2px 8px; border-radius:99px; background:${statusBg}; color:${statusColor};">${statusLabel}</span>
             ${isBlocked ? `<span style="font-size:10px; color:#FF6B78;">⚠ Gate blocked</span>` : ''}
           </div>
         </div>
-
-        <!-- Metrics -->
         <div style="display:flex; gap:24px; flex:1;">
-          ${renderMetricCell('Received', ds.received, order.qty, '#8896A6')}
-          ${renderMetricCell('WIP', Math.max(0, ds.received - ds.output - ds.alt - ds.rejected), null, '#FFB020')}
-          ${renderMetricCell('Output', ds.output, order.qty, '#00E5A0')}
-          ${renderMetricCell('Alt', ds.alt, null, '#F97316')}
-          ${renderMetricCell('Rej', ds.rejected, null, '#FF4757')}
+          ${renderMetricCell('Received', ds.received || 0, refQty, '#8896A6', unit)}
+          ${renderMetricCell('WIP', Math.max(0, (ds.received||0) - (ds.output||0) - (ds.alt||0) - (ds.rejected||0)), null, '#FFB020', unit)}
+          ${renderMetricCell('Output', ds.output || 0, refQty, '#00E5A0', unit)}
+          ${renderMetricCell('Alt', ds.alt || 0, null, '#F97316', unit)}
+          ${renderMetricCell('Rej', ds.rejected || 0, null, '#FF4757', unit)}
+          <div style="min-width:90px;">
+            <div style="font-size:9px; color:#4A5568; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:2px;">Loss %</div>
+            <div style="font-size:12px; font-weight:700; color:#A78BFA;">P: ${lossPlanned.toFixed(1)}%</div>
+            <div style="font-size:12px; font-weight:700; color:${lossActual > lossPlanned && lossPlanned > 0 ? '#FF4757' : '#8896A6'};">A: ${lossActual.toFixed(1)}%</div>
+          </div>
         </div>
-
-        <!-- Progress bar + percentage -->
         <div style="min-width:160px; flex-shrink:0;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
             <span style="font-size:10px; color:#4A5568; font-weight:600;">PROGRESS</span>
@@ -855,51 +919,45 @@ function renderLanes() {
           </div>
           <div style="display:flex; justify-content:space-between; margin-top:4px;">
             <span style="font-size:9px; color:#2D3748;">0</span>
-            <span style="font-size:9px; color:#2D3748;">${order.qty.toLocaleString()}</span>
+            <span style="font-size:9px; color:#2D3748;">${refQty.toLocaleString()} ${unit}</span>
           </div>
         </div>
-
-        <!-- Chevron -->
         <div style="color:#2D3748; font-size:16px;">›</div>
-
       </div>
-      ${isBlocked ? `
-      <div class="bottleneck-bar" style="margin-top:12px;">
-        ⛔ Blocked by unchecked quality gate(s). Click to review and unlock.
-      </div>` : ''}
+      ${isBlocked ? `<div class="bottleneck-bar" style="margin-top:12px;">⛔ Blocked by unchecked quality gate(s). Click to review and unlock.</div>` : ''}
     </div>`;
   }).join('');
 }
 
-function renderMetricCell(label, value, total, color) {
+function renderMetricCell(label, value, total, color, unit) {
   return `
     <div style="min-width:70px;">
       <div style="font-size:9px; color:#4A5568; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:2px;">${label}</div>
       <div style="font-size:18px; font-weight:800; color:${color}; line-height:1;">${(value || 0).toLocaleString()}</div>
-      ${total ? `<div style="font-size:9px; color:#2D3748;">${Math.round(((value||0)/total)*100)}%</div>` : ''}
+      ${total ? `<div style="font-size:9px; color:#2D3748;">${Math.round(((value||0)/total)*100)}%</div>` : `<div style="font-size:9px; color:#2D3748;">${unit||''}</div>`}
     </div>`;
 }
 
-/* ── MODAL ──────────────────────────────────────────────────────── */
+/* ── MODAL ───────────────────────────────────────────────────────── */
 function openModal(deptId) {
   modalDeptId = deptId;
   renderModal();
   document.getElementById('entryModal').classList.add('open');
 }
-
 function closeModal() {
   document.getElementById('entryModal').classList.remove('open');
   modalDeptId = null;
 }
 
 function renderModal() {
-  const dept  = DEPARTMENTS.find(d => d.id === modalDeptId);
+  const dept = DEPARTMENTS.find(d => d.id === modalDeptId);
   const order = getOrder();
-  const ds    = order.state[modalDeptId];
+  const ds = order.state[modalDeptId];
   const isEditor = appState.mode === 'editor';
-
-  const prevOutput = dept.prevDept ? order.state[dept.prevDept].output : order.qty;
-  const wip = Math.max(0, ds.received - ds.output - ds.alt - ds.rejected);
+  const unit = DEPT_UNIT[dept.id];
+  const refQty = unit === 'KG' ? (order.qty > 0 && order.consumption > 0 ? Math.round(order.qty * order.consumption / 1000) : 0) : order.qty;
+  const prevOutput = dept.prevDept ? (order.state[dept.prevDept].output || 0) : refQty;
+  const wip = Math.max(0, (ds.received||0) - (ds.output||0) - (ds.alt||0) - (ds.rejected||0));
   const allRequiredGates = dept.gates.filter(g => g.required).every(g => ds.gateChecks[g.id]);
 
   document.getElementById('modalContent').innerHTML = `
@@ -907,121 +965,115 @@ function renderModal() {
       <!-- Header -->
       <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px;">
         <div style="display:flex; align-items:center; gap:14px;">
-          <div style="width:52px; height:52px; color:${dept.color}; background:${dept.color}15; border-radius:12px; padding:9px; flex-shrink:0;">
-            ${dept.icon}
-          </div>
+          <div style="width:52px; height:52px; color:${dept.color}; background:${dept.color}15; border-radius:12px; padding:9px; flex-shrink:0;">${dept.icon}</div>
           <div>
-            <div style="font-size:20px; font-weight:800; color:#E2E8F0;">${dept.label}</div>
-            <div style="font-size:12px; color:#8896A6; margin-top:2px;">
-              ${order.id} · ${order.buyer} · ${order.item} · ${order.qty.toLocaleString()} pcs
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div style="font-size:20px; font-weight:800; color:#E2E8F0;">${dept.label}</div>
+              <span style="font-size:10px; color:#4A5568; font-weight:700; text-transform:uppercase; background:#1F273380; padding:2px 8px; border-radius:4px;">Measured in ${unit}</span>
             </div>
+            <div style="font-size:12px; color:#8896A6; margin-top:2px;">${order.id} · ${order.buyer} · ${order.item} · ${order.qty.toLocaleString()} pcs</div>
           </div>
         </div>
         <button onclick="closeModal()" style="background:#1F2733; border:none; color:#8896A6; cursor:pointer; border-radius:8px; width:32px; height:32px; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
       </div>
 
       ${dept.gates.length > 0 ? `
-      <!-- Quality Gate Checklist -->
       <div style="background:#111318; border:1px solid #1F2733; border-radius:10px; padding:16px; margin-bottom:20px;">
         <div style="font-size:11px; font-weight:700; color:#FFB020; text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px;">🔐 Quality Gates — must complete before output flows forward</div>
         ${dept.gates.map(g => `
-          <label style="display:flex; align-items:flex-start; gap:10px; cursor:${isEditor ? 'pointer' : 'default'}; margin-bottom:10px; padding:8px; border-radius:6px; background:${ds.gateChecks[g.id] ? '#00E5A010' : 'transparent'}; border:1px solid ${ds.gateChecks[g.id] ? '#00E5A030' : '#1F2733'}; transition:all .15s;">
-            <input type="checkbox" class="ntl-check" id="gate_${g.id}"
-              ${ds.gateChecks[g.id] ? 'checked' : ''}
-              ${!isEditor ? 'disabled' : ''}
-              onchange="toggleGate('${g.id}', this.checked)" />
+          <label style="display:flex; align-items:flex-start; gap:10px; cursor:${isEditor?'pointer':'default'}; margin-bottom:10px; padding:8px; border-radius:6px; background:${ds.gateChecks[g.id]?'#00E5A010':'transparent'}; border:1px solid ${ds.gateChecks[g.id]?'#00E5A030':'#1F2733'}; transition:all .15s;">
+            <input type="checkbox" class="ntl-check" ${ds.gateChecks[g.id]?'checked':''} ${!isEditor?'disabled':''} onchange="toggleGate('${g.id}', this.checked)" />
             <div>
-              <div style="font-size:13px; color:${ds.gateChecks[g.id] ? '#E2E8F0' : '#8896A6'}; font-weight:500;">${g.label}</div>
+              <div style="font-size:13px; color:${ds.gateChecks[g.id]?'#E2E8F0':'#8896A6'}; font-weight:500;">${g.label}</div>
               ${g.required ? `<div style="font-size:10px; color:#FF4757; margin-top:2px;">Required</div>` : `<div style="font-size:10px; color:#4A5568; margin-top:2px;">Optional</div>`}
             </div>
           </label>
         `).join('')}
-        ${!allRequiredGates && !isEditor ? `
-          <div class="gate-blocked" style="margin-top:8px;">
-            ⛔ Switch to Editor mode to check off quality gates.
-          </div>` : ''}
+        ${!allRequiredGates && !isEditor ? `<div style="background:#FF47571A; border:1px solid #FF475740; border-radius:8px; padding:8px 12px; font-size:12px; color:#FF8B96; margin-top:8px;">⛔ Switch to Editor mode to check off quality gates.</div>` : ''}
       </div>` : ''}
 
       ${dept.prevDept ? `
-      <!-- Auto-fill notice -->
       <div style="background:#00C2FF0A; border:1px solid #00C2FF20; border-radius:8px; padding:10px 14px; margin-bottom:16px; font-size:12px; color:#00C2FF80;">
-        ℹ Previous stage (${DEPARTMENTS.find(d => d.id === dept.prevDept).label}) approved output:
-        <strong style="color:#00C2FF;">${prevOutput.toLocaleString()} pcs</strong>
+        ℹ Previous stage (${DEPARTMENTS.find(d=>d.id===dept.prevDept).label}) approved output:
+        <strong style="color:#00C2FF;">${prevOutput.toLocaleString()} ${DEPT_UNIT[dept.prevDept]}</strong>
         — auto-suggested as Received quantity below.
       </div>` : ''}
 
-      <!-- Entry Form -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
-        <div>
-          <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Quantity Received</label>
-          <input id="inp_received" class="ntl-input" type="number" min="0" max="${order.qty}"
-            value="${ds.received || ''}"
-            placeholder="${prevOutput.toLocaleString()} (suggested)"
-            ${!isEditor ? 'readonly' : ''}
-            oninput="calcWIP()" />
-        </div>
-        <div>
-          <label style="font-size:11px; font-weight:700; color:#FFB020; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Running WIP <span style="font-weight:400; text-transform:none; letter-spacing:0;">(auto-calc)</span></label>
-          <input id="inp_wip" class="ntl-input" type="number" value="${wip}" readonly style="color:#FFB020; font-weight:700;" />
-        </div>
-        <div>
-          <label style="font-size:11px; font-weight:700; color:#00E5A0; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Approved Output</label>
-          <input id="inp_output" class="ntl-input" type="number" min="0"
-            value="${ds.output || ''}"
-            placeholder="0"
-            ${!isEditor ? 'readonly' : ''}
-            oninput="calcWIP()" />
-        </div>
+      <!-- Process Loss -->
+      <div style="background:#A78BFA0A; border:1px solid #A78BFA20; border-radius:10px; padding:14px; margin-bottom:16px;">
+        <div style="font-size:11px; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px;">📉 Process Loss (%)</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
           <div>
-            <label style="font-size:11px; font-weight:700; color:#F97316; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Alteration</label>
-            <input id="inp_alt" class="ntl-input" type="number" min="0"
-              value="${ds.alt || ''}"
-              placeholder="0"
-              ${!isEditor ? 'readonly' : ''}
-              oninput="calcWIP()" />
+            <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Planned Loss %</label>
+            <input id="inp_plannedLoss" class="ntl-input" type="number" min="0" max="100" step="0.1" value="${(ds.plannedLoss||0).toFixed(1)}" ${!isEditor?'readonly':''} />
           </div>
           <div>
-            <label style="font-size:11px; font-weight:700; color:#FF4757; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Rejected</label>
-            <input id="inp_rej" class="ntl-input" type="number" min="0"
-              value="${ds.rejected || ''}"
-              placeholder="0"
-              ${!isEditor ? 'readonly' : ''}
-              oninput="calcWIP()" />
+            <label style="font-size:11px; font-weight:700; color:#4A5568; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Actual Loss %</label>
+            <input id="inp_actualLoss" class="ntl-input" type="number" min="0" max="100" step="0.1" value="${(ds.actualLoss||0).toFixed(1)}" ${!isEditor?'readonly':''} oninput="calcWIP()" />
           </div>
         </div>
       </div>
 
-      <!-- Mini progress in modal -->
+      <!-- Entry Form -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#8896A6; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Qty Received (${unit})</label>
+          <input id="inp_received" class="ntl-input" type="number" min="0" value="${ds.received||0}" placeholder="${prevOutput.toLocaleString()} (suggested)" ${!isEditor?'readonly':''} oninput="calcWIP()" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#FFB020; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Running WIP <span style="font-weight:400;">(auto)</span></label>
+          <input id="inp_wip" class="ntl-input" type="number" value="${wip}" readonly style="color:#FFB020; font-weight:700;" />
+        </div>
+        <div>
+          <label style="font-size:11px; font-weight:700; color:#00E5A0; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Approved Output (${unit})</label>
+          <input id="inp_output" class="ntl-input" type="number" min="0" value="${ds.output||0}" placeholder="0" ${!isEditor?'readonly':''} oninput="calcWIP()" />
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#F97316; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Alteration</label>
+            <input id="inp_alt" class="ntl-input" type="number" min="0" value="${ds.alt||0}" placeholder="0" ${!isEditor?'readonly':''} oninput="calcWIP()" />
+          </div>
+          <div>
+            <label style="font-size:11px; font-weight:700; color:#FF4757; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;">Rejected</label>
+            <input id="inp_rej" class="ntl-input" type="number" min="0" value="${ds.rejected||0}" placeholder="0" ${!isEditor?'readonly':''} oninput="calcWIP()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini progress -->
       <div style="background:#111318; border-radius:8px; padding:12px; margin-bottom:20px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <span style="font-size:11px; color:#4A5568; font-weight:600;">DEPT COMPLETION</span>
-          <span style="font-size:16px; font-weight:800; color:#00E5A0;" id="modalPct">${Math.round((ds.output / order.qty)*100)}%</span>
+          <span style="font-size:11px; color:#4A5568; font-weight:600;">DEPT COMPLETION (vs ${unit === 'KG' ? 'target KG' : 'order qty'})</span>
+          <span style="font-size:16px; font-weight:800; color:#00E5A0;" id="modalPct">0%</span>
         </div>
         <div class="progress-track" style="height:8px;">
-          <div class="progress-fill" id="modalPctBar" style="width:${Math.round((ds.output/order.qty)*100)}%; background:linear-gradient(90deg, #00E5A0, #00C2FF);"></div>
+          <div class="progress-fill" id="modalPctBar" style="width:0%; background:linear-gradient(90deg,#00E5A0,#00C2FF);"></div>
         </div>
       </div>
 
       <!-- Footer -->
       <div style="display:flex; justify-content:flex-end; gap:10px;">
         <button onclick="closeModal()" class="btn-ghost">Cancel</button>
-        ${isEditor ? `<button onclick="saveDeptData()" class="btn-primary">💾 Save & Sync</button>` : `<div style="font-size:12px; color:#4A5568; display:flex; align-items:center; padding:0 12px;">Read-only — switch to Editor mode to enter data</div>`}
+        ${isEditor ? `<button onclick="saveDeptData()" class="btn-primary">💾 Save & Sync</button>` : `<div style="font-size:12px; color:#4A5568; display:flex; align-items:center; padding:0 12px;">Read-only — switch to Editor to enter data</div>`}
       </div>
     </div>`;
+
+  // Init percent display
+  calcWIP();
 }
 
-/* ── FORM LOGIC ─────────────────────────────────────────────────── */
 function calcWIP() {
-  const received = parseInt(document.getElementById('inp_received').value) || 0;
-  const output   = parseInt(document.getElementById('inp_output').value)   || 0;
-  const alt      = parseInt(document.getElementById('inp_alt').value)      || 0;
-  const rej      = parseInt(document.getElementById('inp_rej').value)      || 0;
+  const received = parseFloat(document.getElementById('inp_received').value) || 0;
+  const output   = parseFloat(document.getElementById('inp_output').value)   || 0;
+  const alt      = parseFloat(document.getElementById('inp_alt').value)      || 0;
+  const rej      = parseFloat(document.getElementById('inp_rej').value)      || 0;
   const wip = Math.max(0, received - output - alt - rej);
   document.getElementById('inp_wip').value = wip;
 
   const order = getOrder();
-  const pct = Math.min(100, Math.round((output / order.qty) * 100));
+  const unit = DEPT_UNIT[modalDeptId];
+  const refQty = unit === 'KG' ? (order.qty > 0 && order.consumption > 0 ? Math.round(order.qty * order.consumption / 1000) : 0) : order.qty;
+  const pct = refQty > 0 ? Math.min(100, Math.round((output / refQty) * 100)) : 0;
   document.getElementById('modalPct').textContent = pct + '%';
   document.getElementById('modalPctBar').style.width = pct + '%';
 }
@@ -1029,44 +1081,154 @@ function calcWIP() {
 function toggleGate(gateId, val) {
   const order = getOrder();
   order.state[modalDeptId].gateChecks[gateId] = val;
-  publishState();
-  renderLanes();
+  persistState(); publishState(); renderLanes();
 }
 
 function saveDeptData() {
-  const received = parseInt(document.getElementById('inp_received').value) || 0;
-  const output   = parseInt(document.getElementById('inp_output').value)   || 0;
-  const alt      = parseInt(document.getElementById('inp_alt').value)      || 0;
-  const rejected = parseInt(document.getElementById('inp_rej').value)      || 0;
-  const wip      = Math.max(0, received - output - alt - rejected);
+  const received = parseFloat(document.getElementById('inp_received').value) || 0;
+  const output   = parseFloat(document.getElementById('inp_output').value)   || 0;
+  const alt      = parseFloat(document.getElementById('inp_alt').value)      || 0;
+  const rejected = parseFloat(document.getElementById('inp_rej').value)      || 0;
+  const plannedLoss = parseFloat(document.getElementById('inp_plannedLoss').value) || 0;
+  const actualLoss  = parseFloat(document.getElementById('inp_actualLoss').value)  || 0;
+  const wip = Math.max(0, received - output - alt - rejected);
 
   const order = getOrder();
-  order.state[modalDeptId].received = received;
-  order.state[modalDeptId].output   = output;
-  order.state[modalDeptId].alt      = alt;
-  order.state[modalDeptId].rejected = rejected;
-  order.state[modalDeptId].wip      = wip;
+  Object.assign(order.state[modalDeptId], { received, output, alt, rejected, wip, plannedLoss, actualLoss });
 
-  closeModal();
-  render();
-  publishState();
-  showToast('✓ Saved & synced to all connected users');
+  closeModal(); render(); persistState(); publishState();
+  showToast('✓ Saved & synced');
 }
 
-/* ── MODE & ORDER ───────────────────────────────────────────────── */
+/* ── MODE ────────────────────────────────────────────────────────── */
 function setMode(mode) {
   appState.mode = mode;
-  document.getElementById('btnViewer').classList.toggle('active-mode', mode === 'viewer');
-  document.getElementById('btnEditor').classList.toggle('active-mode', mode === 'editor');
+  const vBtn = document.getElementById('btnViewer');
+  const eBtn = document.getElementById('btnEditor');
+  const eDot = document.getElementById('editorDot');
+
+  vBtn.classList.toggle('active-mode', mode === 'viewer');
+  eBtn.classList.toggle('active-mode', mode === 'editor');
+
+  eDot.style.background = mode === 'editor' ? '#00C2FF' : '#4A5568';
+  eDot.style.boxShadow  = mode === 'editor' ? '0 0 5px #00C2FF60' : 'none';
+
   setConnStatus(mqttConnected ? 'connected' : 'disconnected', mqttConnected ? 'Live' : 'Offline');
 }
 
-function selectOrder(id) {
-  appState.selectedOrderId = id;
-  render();
+/* ── NEW ORDER MODAL ─────────────────────────────────────────────── */
+let sizeRowCount = 0;
+const DEFAULT_SIZES = ['XS','S','M','L','XL','XXL','XXXL'];
+
+function openNewOrderModal() {
+  if (appState.mode !== 'editor') {
+    showToast('⚠ Switch to Editor mode to add orders');
+    return;
+  }
+  sizeRowCount = 0;
+  document.getElementById('no_buyer').value = '';
+  document.getElementById('no_item').value  = '';
+  document.getElementById('no_style').value = '';
+  document.getElementById('no_color').value = '';
+  document.getElementById('no_ordnum').value= '';
+  document.getElementById('no_ship').value  = '';
+  document.getElementById('no_qty').value   = '0';
+  document.getElementById('no_consumption').value = '0';
+  document.getElementById('noErr').textContent = '';
+  document.getElementById('sizeRows').innerHTML = '';
+  // Add 4 default size rows
+  ['S','M','L','XL'].forEach(s => addSizeRow(s));
+  document.getElementById('newOrderModal').classList.add('open');
 }
 
-/* ── SYNC MODAL ─────────────────────────────────────────────────── */
+function closeNewOrderModal() {
+  document.getElementById('newOrderModal').classList.remove('open');
+}
+
+function addSizeRow(defaultSize) {
+  const idx = sizeRowCount++;
+  const row = document.createElement('div');
+  row.id = `sizeRow_${idx}`;
+  row.style.cssText = 'display:flex; gap:8px; align-items:center;';
+  const sizeOpts = DEFAULT_SIZES.map(s => `<option value="${s}" ${s===(defaultSize||'M')?'selected':''}>${s}</option>`).join('');
+  row.innerHTML = `
+    <select class="ntl-select" id="szSize_${idx}" style="width:90px;">${sizeOpts}</select>
+    <input class="ntl-input" type="number" id="szQty_${idx}" min="0" value="0" placeholder="0 pcs" style="flex:1;" />
+    <button onclick="removeSizeRow(${idx})" class="btn-danger" style="flex-shrink:0;">✕</button>
+  `;
+  document.getElementById('sizeRows').appendChild(row);
+}
+
+function removeSizeRow(idx) {
+  const el = document.getElementById(`sizeRow_${idx}`);
+  if (el) el.remove();
+}
+
+function saveNewOrder() {
+  const buyer = document.getElementById('no_buyer').value.trim();
+  const item  = document.getElementById('no_item').value.trim();
+  const ordId = document.getElementById('no_ordnum').value.trim().toUpperCase();
+  const qty   = parseInt(document.getElementById('no_qty').value) || 0;
+  const cons  = parseFloat(document.getElementById('no_consumption').value) || 0;
+
+  if (!buyer || !item || !ordId) {
+    document.getElementById('noErr').textContent = 'Buyer Name, Item/Style, and Order Number are required.';
+    return;
+  }
+  if (appState.orders.find(o => o.id === ordId)) {
+    document.getElementById('noErr').textContent = `Order ${ordId} already exists.`;
+    return;
+  }
+
+  // Collect sizes
+  const sizes = [];
+  document.querySelectorAll('[id^="sizeRow_"]').forEach(row => {
+    const idx = row.id.split('_')[1];
+    const sz  = document.getElementById(`szSize_${idx}`);
+    const qEl = document.getElementById(`szQty_${idx}`);
+    if (sz && qEl) sizes.push({ size: sz.value, qty: parseInt(qEl.value) || 0 });
+  });
+
+  const newOrder = {
+    id: ordId,
+    buyer,
+    item,
+    style: document.getElementById('no_style').value.trim(),
+    color: document.getElementById('no_color').value.trim(),
+    qty,
+    shipDate: document.getElementById('no_ship').value,
+    consumption: cons,
+    sizes,
+    state: makeOrderState(),
+  };
+
+  appState.orders.push(newOrder);
+  appState.selectedOrderId = ordId;
+  closeNewOrderModal();
+  render();
+  persistState(); publishState();
+  showToast(`✓ Order ${ordId} created`);
+}
+
+/* ── CALC MODAL ──────────────────────────────────────────────────── */
+function openCalcModal() {
+  const order = getOrder();
+  document.getElementById('calc_cons').value = order ? (order.consumption || 0) : 0;
+  document.getElementById('calc_kg').value = 0;
+  calcFabric();
+  document.getElementById('calcModal').classList.add('open');
+}
+function closeCalcModal() {
+  document.getElementById('calcModal').classList.remove('open');
+}
+function calcFabric() {
+  const kg   = parseFloat(document.getElementById('calc_kg').value)   || 0;
+  const cons = parseFloat(document.getElementById('calc_cons').value) || 0;
+  const result = cons > 0 ? Math.floor((kg * 1000) / cons) : 0;
+  document.getElementById('calc_result').textContent = result.toLocaleString();
+}
+
+/* ── SYNC MODAL ──────────────────────────────────────────────────── */
 function openSyncModal() {
   document.getElementById('tokenDisplay').value = appState.sessionId;
   document.getElementById('stateJson').value = '';
@@ -1075,44 +1237,37 @@ function openSyncModal() {
 function closeSyncModal() {
   document.getElementById('syncModal').classList.remove('open');
 }
-
 function copyToken() {
-  const id = appState.sessionId;
-  navigator.clipboard.writeText(id).then(() => showToast('📋 Session token copied!'));
-  document.getElementById('tokenDisplay').value = id;
+  navigator.clipboard.writeText(appState.sessionId).then(() => showToast('📋 Session token copied!'));
 }
-
 function joinSession() {
   const token = document.getElementById('joinTokenInput').value.trim().toUpperCase();
   if (!token) return;
   appState.sessionId = token;
   document.getElementById('sessionDisplay').textContent = token;
+  // Joining always puts you in viewer mode
+  setMode('viewer');
   closeSyncModal();
   setConnStatus('connecting', 'Reconnecting…');
   if (mqttClient) { mqttClient.end(true); mqttClient = null; mqttConnected = false; }
   initMQTT();
-  showToast('🔗 Joining session: ' + token);
+  showToast('🔗 Joined session: ' + token + ' (Viewer mode)');
 }
-
 function exportState() {
   document.getElementById('stateJson').value = JSON.stringify(appState.orders, null, 2);
 }
-
 function importState() {
   try {
     const parsed = JSON.parse(document.getElementById('stateJson').value);
     if (Array.isArray(parsed)) {
       appState.orders = parsed;
-      closeSyncModal();
-      render();
+      closeSyncModal(); render(); persistState();
       showToast('✓ State imported successfully');
     }
-  } catch(e) {
-    showToast('⚠ Invalid JSON — check and retry');
-  }
+  } catch(e) { showToast('⚠ Invalid JSON'); }
 }
 
-/* ── TOAST ──────────────────────────────────────────────────────── */
+/* ── TOAST ───────────────────────────────────────────────────────── */
 let toastTimer;
 function showToast(msg) {
   const el = document.getElementById('syncToast');
@@ -1122,32 +1277,28 @@ function showToast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-/* ── INIT ───────────────────────────────────────────────────────── */
+/* ── INIT ────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  // Session ID in header
+  loadPersistedState();
   document.getElementById('sessionDisplay').textContent = appState.sessionId;
 
-  // Close modal on overlay click
-  document.getElementById('entryModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('entryModal')) closeModal();
-  });
-  document.getElementById('syncModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('syncModal')) closeSyncModal();
+  // Modal close on overlay click
+  ['entryModal','syncModal','calcModal','newOrderModal'].forEach(id => {
+    document.getElementById(id).addEventListener('click', e => {
+      if (e.target === document.getElementById(id)) {
+        if (id === 'entryModal') closeModal();
+        else if (id === 'syncModal') closeSyncModal();
+        else if (id === 'calcModal') closeCalcModal();
+        else closeNewOrderModal();
+      }
+    });
   });
 
-  // Set initial mode buttons
-  setMode('editor');
-
-  // Initial render
+  setMode('viewer'); // Start in viewer mode — editor requires password
   render();
-
-  // Init MQTT (after MQTT.js is loaded)
   initMQTT();
 });
 </script>
-
-<!-- MQTT.js via CDN -->
 <script src="https://unpkg.com/mqtt@5.3.4/dist/mqtt.min.js"></script>
-
 </body>
 </html>
